@@ -2,7 +2,7 @@
 # Introduction
 Macrocomplex-builder is a software designed to build macrocomplex protein structures in pdb format. It uses pairs of interactions as input.
 
-##Authors
+## Authors
 Altair Chinchilla
 Natàlia Segura
 Pau Badia i Mompel
