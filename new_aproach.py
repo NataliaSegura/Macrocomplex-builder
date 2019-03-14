@@ -13,7 +13,7 @@ class CustomModel(Model):
         entity_id = entity.get_id()
         entity.set_parent(self)
         self.child_list.append(entity)
-        self.child_dict[entity_id] = entity
+        #self.child_dict[entity_id] = entity
 
 
 class CustomChain(Chain):
@@ -40,7 +40,14 @@ def read_pdbs(directory):
     pdbfiles = [directory + f for f in listdir(directory)]
     pdbpairs = []
     for pdbf in pdbfiles:
-        pdbpairs.append(parser.get_structure("Model_pair", pdbf)[0])
+        model = parser.get_structure("Model_pair", pdbf)[0]
+        for chain in model:
+            chain_res_list = []
+            for res in chain:
+                if res.id[0] == ' ':
+                    chain_res_list.append(res)
+            chain.child_list = chain_res_list
+        pdbpairs.append(model)
     return pdbpairs
 
 def get_new_id(iterator):
@@ -100,8 +107,10 @@ def get_interaction_dict(clean_pdbs):
     for pdb in clean_pdbs:
         chain1, chain2 = list(pdb.get_chains())
         inter1_2, inter2_1 = get_interactions(chain1, chain2)
-        interaction_dict.setdefault(chain1.id, dict())[inter1_2] = (chain1, chain2)
-        interaction_dict.setdefault(chain2.id, dict())[inter2_1] = (chain2, chain1)
+        if inter1_2 != ():
+            interaction_dict.setdefault(chain1.id, dict())[inter1_2] = (chain1, chain2)
+        if inter2_1 != ():
+            interaction_dict.setdefault(chain2.id, dict())[inter2_1] = (chain2, chain1)
     return interaction_dict
 
 def update_interactions_dict(interaction_dict):
@@ -123,34 +132,42 @@ def has_clashes(chain, model):
     for atom in chain_atoms:
         clashes += len(ns.search(atom.coord, 1.5))
 
-    if clashes/len(chain_atoms) >= 0.05 :
+    if clashes/len(chain_atoms) >= 0.10:
         return True
     else:
         return False
 
 
-directory = "hemo/"
+directory = "example1/pairs/"
 raw_pdbmodels = read_pdbs(directory)
 seq_dict, clean_pdbs = get_seq_dict(raw_pdbmodels)
 interaction_dict = get_interaction_dict(clean_pdbs)
 update_interactions_dict(interaction_dict)
 
 run = True
-new_pdb = interaction_dict["A"][(104, 106, 107, 108, 109, 181, 184, 398)][0].get_parent()
+#new_pdb = interaction_dict["A"][(104, 106, 107, 108, 109, 181, 184)][0].get_parent()
+#new_pdb = interaction_dict["A"][(34, 37, 40, 43, 99, 101, 105, 146)][0].get_parent()
+#new_pdb = interaction_dict["A"][(122, 124, 132, 133, 135, 139, 140, 141, 157, 164, 165)][0].get_parent()
+#new_pdb = interaction_dict["A"][(79, 128, 129, 130, 146, 150, 151, 152, 153, 154, 155, 156, 158, 162, 199, 200, 201, 203, 204, 205, 206)][0].get_parent()
+
+new_pdb = interaction_dict["A"][next(iter(interaction_dict["A"]))][0].get_parent()
+
+
 
 limit = 0
 while run:
     counter = 0
     for chain in new_pdb:
-        if limit < 8:
+        if limit < 999999:
             if len(chain.interactions) > 0:
                 for inter_tple in chain.interactions:
                     fix, move = interaction_dict[chain.id][inter_tple]
                     sup = Bio.PDB.Superimposer()
                     sup.set_atoms(list(chain.get_atoms()), list(fix.get_atoms()))
+                    move = move.copy()
                     sup.apply(list(move.get_atoms()))
                     if not has_clashes(move, new_pdb):
-                        new_pdb.add(copy.deepcopy(move))
+                        new_pdb.add(move)
                     x = 0
                 chain.interactions = []
                 counter = 1
@@ -162,7 +179,7 @@ while run:
 
 io = Bio.PDB.PDBIO()
 io.set_structure(new_pdb)
-io.save(directory + 'macrocomplex.pdb')
+io.save('macrocomplex'+ directory.replace("/", "_") +'.pdb')
 x = 0
 
 
