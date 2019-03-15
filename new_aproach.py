@@ -4,6 +4,7 @@ from Bio.PDB.PDBParser import PDBParser
 from os import listdir
 from Bio.PDB.Polypeptide import PPBuilder
 import Bio.PDB.NeighborSearch
+import Bio
 import copy
 
 class CustomModel(Model):
@@ -25,8 +26,7 @@ class CustomChain(Chain):
         self.xtra = chainObject.xtra
         self._id = chainObject._id
         self.parent = chainObject.parent
-        ppb = PPBuilder()
-        self.sequence = ppb.build_peptides(chainObject)[0].get_sequence()._data
+        self.sequence = get_sequence(self)
         self.interactions = lst
 
 
@@ -42,6 +42,7 @@ def read_pdbs(directory):
     for pdbf in pdbfiles:
         model = parser.get_structure("Model_pair", pdbf)[0]
         for chain in model:
+            seq = get_sequence(chain)
             chain_res_list = []
             for res in chain:
                 if res.id[0] == ' ':
@@ -59,7 +60,6 @@ def get_new_id(iterator):
 def get_seq_dict(pdbmodels):
     """Unifies chain identifiers and returns Custom Model instances"""
     seq_dict = dict()
-    ppb = PPBuilder()
     models = []
     i = 0
     for pdb in pdbmodels:
@@ -68,14 +68,14 @@ def get_seq_dict(pdbmodels):
         chain1, chain2 = list(pdb.get_chains())
         chain1.detach_parent()
         chain2.detach_parent()
-        chain1_seq = ppb.build_peptides(chain1)[0].get_sequence()._data
+        chain1_seq = get_sequence(chain1)
         if chain1_seq not in seq_dict:
             new_id = get_new_id(seq_dict.values())
             seq_dict[chain1_seq] = new_id
             chain1.id = new_id
         else:
             chain1.id = seq_dict[chain1_seq]
-        chain2_seq = ppb.build_peptides(chain2)[0].get_sequence()._data
+        chain2_seq = get_sequence(chain2)
         if chain2_seq not in seq_dict:
             new_id = get_new_id(seq_dict.values())
             seq_dict[chain2_seq] = new_id
@@ -113,6 +113,17 @@ def get_interaction_dict(clean_pdbs):
             interaction_dict.setdefault(chain2.id, dict())[inter2_1] = (chain2, chain1)
     return interaction_dict
 
+def get_sequence(chain):
+    d = {'CYS': 'C', 'ASP': 'D', 'SER': 'S', 'GLN': 'Q', 'LYS': 'K',
+         'ILE': 'I', 'PRO': 'P', 'THR': 'T', 'PHE': 'F', 'ASN': 'N',
+         'GLY': 'G', 'HIS': 'H', 'LEU': 'L', 'ARG': 'R', 'TRP': 'W',
+         'ALA': 'A', 'VAL': 'V', 'GLU': 'E', 'TYR': 'Y', 'MET': 'M'}
+    seq = ""
+    for res in chain:
+        seq += d[res.resname]
+    return seq
+
+
 def update_interactions_dict(interaction_dict):
     """Updates each interaction's chains with a CustomChain class"""
     for chain in interaction_dict:
@@ -124,10 +135,10 @@ def update_interactions_dict(interaction_dict):
             parent.child_list = [chain1, chain2]
             interaction_dict[chain][interaction_tple] = chain1, chain2
 
-def has_clashes(chain, model):
+def has_clashes(move_atoms, model):
     backbone = {"CA"}
     chain_atoms = []
-    for atom in chain.get_atoms():
+    for atom in move_atoms:
         if atom.id in backbone:
             chain_atoms.append(atom)
     model_atoms = []
@@ -145,7 +156,7 @@ def has_clashes(chain, model):
         return False
 
 
-directory = "microtubul/"
+directory = "mosaic_virus/"
 raw_pdbmodels = read_pdbs(directory)
 seq_dict, clean_pdbs = get_seq_dict(raw_pdbmodels)
 interaction_dict = get_interaction_dict(clean_pdbs)
@@ -165,21 +176,25 @@ limit = 0
 while run:
     counter = 0
     for chain in new_pdb:
-        if counter < 40:
+        if counter < 9999999:
             if len(chain.interactions) > 0:
                 for inter_tple in chain.interactions:
                     fix, to_move = interaction_dict[chain.id][inter_tple]
                     sup = Bio.PDB.Superimposer()
-                    sup.set_atoms(list(chain.get_atoms()), list(fix.get_atoms()))
+                    sup.set_atoms(sorted(chain.get_atoms()), sorted(fix.get_atoms()))
                     move = to_move.copy()
-                    sup.apply(list(move.get_atoms()))
-                    if not has_clashes(move, new_pdb):
-                        print("Chain " + str(limit) + " added")
+                    move_atoms = sorted(move.get_atoms())
+                    sup.apply(move_atoms)
+                    if not has_clashes(move_atoms, new_pdb):
+                        print("Chain " + str(counter) + " added")
                         move.parent = None
                         new_pdb.add(move)
+                        io = Bio.PDB.PDBIO()
+                        io.set_structure(new_pdb)
+                        io.save('micro/' + str(counter) + '.pdb')
                         counter += 1
                     else:
-                        print("Chain " + str(limit) + " NOT added")
+                        print("Chain NOT added")
                     x = 0
                     limit += 1
                 chain.interactions = []
@@ -192,6 +207,16 @@ while run:
         print("Done")
         run = False
 """
+for chain in interaction_dict:
+    for interaction in interaction_dict[chain]:
+        model = CustomModel(chain+str(interaction))
+        chain1, chain2 = interaction_dict[chain][interaction]
+        model.add(chain1)
+        model.add(chain2)
+        io = Bio.PDB.PDBIO()
+        io.set_structure(model)
+        io.save(chain+str(interaction) + '.pdb')"""
+"""
 io = Bio.PDB.PDBIO()
 io.set_structure(new_pdb)
 io.save('macrocomplex_'+ directory.replace("/", "_") +'.pdb')"""
@@ -201,10 +226,12 @@ for chain in new_pdb:
     chain.id = get_new_id([x.id for x in final_file.get_chains()])
     final_file.add(chain)
 
+
 io = Bio.PDB.PDBIO()
 io.set_structure(final_file)
 io.save('macrocomplex_'+ directory.replace("/", "_") +'.pdb')
-
 x = 0
 
-
+io = Bio.PDB.MMCIFIO()
+io.set_structure(final_file)
+io.save(directory.replace("/", "_")+".cif")
