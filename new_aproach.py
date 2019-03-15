@@ -125,61 +125,86 @@ def update_interactions_dict(interaction_dict):
             interaction_dict[chain][interaction_tple] = chain1, chain2
 
 def has_clashes(chain, model):
-    chain_atoms = list(chain.get_atoms())
-    model_atoms = list(model.get_atoms())
+    backbone = {"CA"}
+    chain_atoms = []
+    for atom in chain.get_atoms():
+        if atom.id in backbone:
+            chain_atoms.append(atom)
+    model_atoms = []
+    for atom in model.get_atoms():
+        if atom.id in backbone:
+            model_atoms.append(atom)
     ns = Bio.PDB.NeighborSearch(model_atoms)
     clashes = 0
     for atom in chain_atoms:
         clashes += len(ns.search(atom.coord, 1.5))
 
-    if clashes/len(chain_atoms) >= 0.10:
+    if clashes/len(chain_atoms) >= 0.015:
         return True
     else:
         return False
 
 
-directory = "example1/pairs/"
+directory = "microtubul/"
 raw_pdbmodels = read_pdbs(directory)
 seq_dict, clean_pdbs = get_seq_dict(raw_pdbmodels)
 interaction_dict = get_interaction_dict(clean_pdbs)
 update_interactions_dict(interaction_dict)
 
-run = True
+
 #new_pdb = interaction_dict["A"][(104, 106, 107, 108, 109, 181, 184)][0].get_parent()
 #new_pdb = interaction_dict["A"][(34, 37, 40, 43, 99, 101, 105, 146)][0].get_parent()
 #new_pdb = interaction_dict["A"][(122, 124, 132, 133, 135, 139, 140, 141, 157, 164, 165)][0].get_parent()
 #new_pdb = interaction_dict["A"][(79, 128, 129, 130, 146, 150, 151, 152, 153, 154, 155, 156, 158, 162, 199, 200, 201, 203, 204, 205, 206)][0].get_parent()
 
-new_pdb = interaction_dict["A"][next(iter(interaction_dict["A"]))][0].get_parent()
+new_pdb = interaction_dict["A"][next(iter(interaction_dict["A"]))][0].get_parent().copy()
 
 
-
+run = True
 limit = 0
 while run:
     counter = 0
     for chain in new_pdb:
-        if limit < 999999:
+        if counter < 40:
             if len(chain.interactions) > 0:
                 for inter_tple in chain.interactions:
-                    fix, move = interaction_dict[chain.id][inter_tple]
+                    fix, to_move = interaction_dict[chain.id][inter_tple]
                     sup = Bio.PDB.Superimposer()
                     sup.set_atoms(list(chain.get_atoms()), list(fix.get_atoms()))
-                    move = move.copy()
+                    move = to_move.copy()
                     sup.apply(list(move.get_atoms()))
                     if not has_clashes(move, new_pdb):
+                        print("Chain " + str(limit) + " added")
+                        move.parent = None
                         new_pdb.add(move)
+                        counter += 1
+                    else:
+                        print("Chain " + str(limit) + " NOT added")
                     x = 0
+                    limit += 1
                 chain.interactions = []
-                counter = 1
-                limit += 1
+            else:
+                print("Empty chain")
         else:
             run = False
-        if counter != 0:
-            run = False
-
+            break
+    if counter != 0:
+        print("Done")
+        run = False
+"""
 io = Bio.PDB.PDBIO()
 io.set_structure(new_pdb)
-io.save('macrocomplex'+ directory.replace("/", "_") +'.pdb')
+io.save('macrocomplex_'+ directory.replace("/", "_") +'.pdb')"""
+final_file = CustomModel("Macrocomplex")
+for chain in new_pdb:
+    chain.detach_parent()
+    chain.id = get_new_id([x.id for x in final_file.get_chains()])
+    final_file.add(chain)
+
+io = Bio.PDB.PDBIO()
+io.set_structure(final_file)
+io.save('macrocomplex_'+ directory.replace("/", "_") +'.pdb')
+
 x = 0
 
 
