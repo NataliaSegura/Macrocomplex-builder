@@ -10,9 +10,10 @@ parser.add_argument('-c', dest='max_chains', action="store", type=int, default=3
 parser.add_argument('-n', dest='num_models', action="store", type=int, default=1, help="Number of models that the program will compute")
 parser.add_argument('-d', '--dirty', dest='dirty', action="store_true", default=False, help="Generates an output file for each added chain to track how the program builds the complex")
 parser.add_argument('-v', '--verbose', dest='verbose', action="store_true", default=False, help="Shows what the program is doing")
+parser.add_argument('-t', dest='template', action="store", type=str, default=None, help="To discriminate against different models, a template can be given to calculate the RMSD")
 #info.add_argument('-q', '--quiet', dest='quiet', action="store_true", default=False, help="")
 options = parser.parse_args()
-build_macrocomplex(options.directory, options.output, options.max_chains, options.num_models, options.dirty,
+build_macrocomplex(options.directory, options.output, options.max_chains, options.num_models, options.template, options.dirty,
                        options.verbose)
 
 

@@ -2,7 +2,7 @@ from Bio.PDB.Structure import Structure
 from Bio.PDB.Model import Model
 from Bio.PDB.Chain import Chain
 import Bio.PDB.NeighborSearch
-
+import random
 
 class CustomModel(Model):
     """Allows models with more than one same id"""
@@ -80,15 +80,15 @@ class CustomChain(Chain):
                     seq += self.rna[res.resname.strip()]
         return seq
 
-    def get_common_atoms(self, fixed):
+    def get_common_atoms(self, other):
         """Compares the list of atoms of two chains and returns an even tuple of atoms"""
-        chain_atoms = sorted(self.get_atoms())
-        fixed_atoms = sorted(fixed.get_atoms())
-        len_chain = len(chain_atoms)
-        len_fixed = len(fixed_atoms)
-        if len_chain > len_fixed:
-            return chain_atoms[:len_fixed], fixed_atoms
-        elif len_fixed > len_chain:
-            return chain_atoms, fixed_atoms[:len_chain]
+        self_atoms = sorted(self.get_atoms())
+        other_atoms = sorted(other.get_atoms())
+        len_self = len(self_atoms)
+        len_other = len(other_atoms)
+        if len_self > len_other:
+            return self_atoms[:len_other], other_atoms
+        elif len_other > len_self:
+            return self_atoms, other_atoms[:len_self]
         else:
-            return chain_atoms, fixed_atoms
+            return self_atoms, other_atoms
