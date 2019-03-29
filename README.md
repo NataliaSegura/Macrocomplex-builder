@@ -105,16 +105,16 @@ Be sure to have the dependencies previously stated.
 
 The aim of this project is to build a protein macrocomplex (quaternary structure) with a single previous knowledge: a set of know protein pairwise interacions. Let's suppose that we know that there are the following protein - protein interactions: 
 
- <div class="container">
+<div class="container">
     <p align="center">
       <img src="/approach1.png" width="450"/>
       <div class="caption">
           <h4><b>Figure 1</b></h4>
+          <p><i>Here A,B,C are chains/subunits of the macrocomplexe and may differ in sequence and structure</i></p>
       </div>
     </p>
   </div>
 
-  *Here A,B,C are chains/subunits of the macrocomplexe and may differ in sequence and structure*. 
 
 In protein macrocomplexes there are several chains that interact with more than one chain, allowing the rest of interactions to be done. We could start taking one of these pair interactions as a template (i.e. A-B), and then superimpose the rest of the interactions by protein superposition. We have to assume that at least one chain of the template interact with another subunit (in this example A-C). This way we could superpose those identical chains (A-A) and move the new pair interaction to the template. Therefore, we would obtain a resulting structure of three chains (C-A-B). If we repeat this process until all the simillar chains are superposed we would obtain the final macrocomplex.
 
