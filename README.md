@@ -105,14 +105,16 @@ Be sure to have the dependencies previously stated.
 
 The aim of this project is to build a protein macrocomplex (quaternary structure) with a single previous knowledge: a set of know protein pairwise interacions. Let's suppose that we know that there are the following protein - protein interactions: 
 
-<div class="container">
-    <p align="center">
-      <img src="/approach1.png" width="450"/>
-      <div class="caption">
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="//approach1.png" alt="approach1_image" style="width:600px;height:500px">
+        <div class="caption">
           <h4><b>Figure 1</b></h4>
           <p><i>Here A,B,C are chains/subunits of the macrocomplexe and may differ in sequence and structure</i></p>
+        </div>
       </div>
-    </p>
+    </div>
   </div>
 
 
