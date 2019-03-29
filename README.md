@@ -157,7 +157,18 @@ To get a better understanding of how to run the programme properly, we show diff
 
 ## Strong Points
 
+* The algorithm is implemented in such a way that the final output is given in a very fast way. This is due to use an interaction check-list while reconstructing the macrocomplex (*see documentation*). 
+* The program accepts a wide range of input types: 
+  - The input names does not affect to the output (i.e. if all PDB files are named XY.pdb).
+  - Is not necessary to have all the interactions in different PDB files (i.e. case of virus capside or microtubul, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in microtubul).
+  - In case the user gives a non-existing or wrong interaction the program ignores this as a valid input and keeps going.
+  - Different ways of executing 4SMAcroBuilder: from command line or with GUI.
+  - Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models. Different models are scored in an output file.
+  - Possibility of take 
+
 ## Limitations
+
+* 
 
 ## Next Steps
 
