@@ -105,9 +105,9 @@ Be sure to have the dependencies previously stated.
 
 The aim of this project is to build a protein macrocomplex (quaternary structure) with a single previous knowledge: a set of know protein pairwise interacions. Let's suppose that we know that there are the following protein - protein interactions: 
 
-                    Image 1 
+                   Image 1 
 
-  >![Img1](antes.png "Title"){width=50.3%} 
+  >![Img1](approach1.png "Title"){width=50.3%} 
 
   *Here A,B,C are chains/subunits of the macrocomplexe and may differ in sequence and structure*. 
 
