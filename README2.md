@@ -3,27 +3,29 @@
 
 *Pau Badia, Altaïr C.Hernández and Natàlia Segura*
 
-## **TABLE OF CONTENTS**
+## **Index**
 
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-- [SBI-Python project](#sbi-python-project)
-  - [Index](#index)
-  - [Introduction](#introduction)
-  - [Objective](#objective)
+- [4SMacroBuilder](#sbi-python-project)
+  - [Index](#Index)
+  - [Introduction](#Introduction)
+  - [Objective](#Objective)
 - [Requirements](#Requirements)
 - [Installation](#general-information)
-- [Algorithm & Approach](#algorithm-apporach)
+- [Approach](#apporach)
+  - [Algorithm](#algorithm)
+  - [Strong Points](#strong-points)
+  - [Limitations](#Limitations) 
 - [Tutorial](#tutorial)
   - [Command-line arguments](#Command-line-arguments) 
   - [Input files](#input-files)
   - [Example 1](#Example-1)
   - [Example 2](#Example-2)
-  - [Example 2 with optimization](#Example-2-with-optimization)
   - [Example 3](#Example-3)  
 - [GUI - UNDER DEVELOPMENT](#gui-under-development)
   - [Launching the app](#Launching-the-app)
-- [Limitations](#Limitations) 
 - [Next steps](#Next-steps)
+- [FAQ](#FAQS)
   
 <!-- /TOC -->
 
@@ -33,58 +35,81 @@
 
 Proteins are the most versatil macromolecules in living systems, as are in charge on multitude of specific chemical trasnformations, which provide the cell with usable energy and the molecules needed to form its structure and mainatin the *homeostasis*. Proteins also recieve signals from outside the cell, starting intracellular signal transductions and regulating the gene expression in different stress situations. Sometimes, proteins monomers interact between other monomers in order to form protein macrocomplexes, known as the quaternary structure of a protein. Some examples are hemoglobin, the ATP syntase, the RNA polymerase or the ribosome. 
 
-Nevertheless, understanding how proteins interact with others in the assembly process is not that easy. For that reason, 
+Nevertheless, understanding how proteins interact with others in the assembly process is not an easy task. For that reason, different research groups have developed methods that predict how this interaction may occur. In the Protein Data Bank (PDB) are stored a large set of proteins with known structure, after a process of x-ray crystallography or Nuclear Magnetic Ressonance, allowing us to study the molecular space and possible allosteric interactions. 
 
-The main scope of this project is to reconstruct protein macrocomplexes from individual protein pairwise interaction.  
+It is important to stand out that there are some proteins that are difficult to crystallize due to its molecular conformation or dimensionallity, such as virus capsides. In other cases, it could be found a protein - DNA/RNA interaction, and it could be an interesting feature to study in process of transcriptional or translational processes (it would be the case of ribosomes, for instance). 
 
 
-**Problem**
+**Objective**
 
-Given a set of interacting pairs (prot-prot), reconstruct the complete macrocomplex and return a PDB file (or files) with the possible protein macrocomplexes build. 
+The main scope of this project is to reconstruct protein macrocomplexes from individual protein pairwise interactions. In order to do so, we developed a stand-alone application that reads a set of protein - protein interactions in PDB format and reconstruct different multi-subunit complexes. 
 
-## Installation
 
-**RECOMENDED**
+### Requirements
 
- You can download our package using Git with the next command. We also recommend creating a directory named "complexes":
+To run 4SMacroBuilder with all its functionalities some software versions are required, those we used to test the program.
+
+  * [Python 3.6](https://www.python.org/downloads/)
+  * [Biopython](http://biopython.org/wiki/Download)
+  * argparse
+  * os
+  * sys 
+  * numpy 
+
+For the GUI the following ones are also necessary:
+
+  * [Tkinter (for the GUI interface)](https://wiki.python.org/moin/TkInter)
+  * [Pymol](https://www.pymol.org/install.html?)
+
+
+## Installation and Download 
+
+ You can download our package using Git with the next command. We also recommend creating a directory named "Models":
  
- ```bash
-  git clone https://github.com/massonix/SBI-project.git
-  cd SBI-Project
-  mkdir complexes
+
+
+```bash
+  $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
+  $ cd 4SMacroBuilder
+  $ mkdir Models
  ```
-The directory SBI-Project contains the following files and directories:
+At this pont, the directory 4SMacroBuilder should contain the following files and directories:
 
 * README.md, README.pdf: the files containing the tutorial and information about our application.
-* multicomplex.py: the command-line script.
-* multifunctions.py: a module required by multicomplex.py that contains all the functions and classes.
-* example1, example2 and example3: directories with several PDB files that serve as examples of input to the programme,  as we will see later.
-* complexes: an empty folder where the created complexes will be saved.
-* raw_pdbs: the raw PDB files from which we extracted the example pairwise interactions.
-* gui2.py
+* MBlauncher.py: the command-line script to launch the program.
+* MacroB.py: a module requiered by MBlauncher.py where are defined the classes of the program.
+* CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
+* Tests: a directory with several examples stored in sub-directories that serve as input to the program.
+* Models: an empty folder where the created complexes will be saved.
+* Templates: the raw PDB files from which we extracted the example pairwise interactions.
+* seup.py script
 
-### Installation via setup
+Check that all this information has been correctly downloaded and that there is the script called *setup.py*.
 
-To install the package you must unzip the protcomp-X.X folder
-
-```bash
-tar -xvzf protcomp-X.X.tar.gz
-```
-And then run the following command inside the protcomp folder:
+In order to be able to use all the scprits provided in 4SMacroBuilder the user has to install the package in the python site-packages.
 
 ```bash
-sudo python3 setup.py install
+   $ python3 setup.py install
 ```
+Be sure to have the dependencies previously stated.
+
 
 ### Installation via PIP
 
-You can also install the program using pip, the main python files (multicomplex.py and multifunctions.py) as well as some files with additional information will be installed in your default site-packages folder for python. 
+** To be discused **
 
-```bash
-pip3 install protcomp
-```
+## Approach
 
-## General Information
+### Algorithm implementation
+
+The aim of this project is to build a protein macrocomplex with a single previous knowledge: a set of know protein pairwise interacions. So we can suppose that we know that there are this pair interactions: 
+  * A-B
+  * A-C
+  * B-D
+
+Here A,B,C and D are chains or subunits of the macrocomplexes and may differ in sequence and structure. This problem could be solved by starting from a pairwise interaction and then trying to superpose each of the interactions of th set. So it would start from the interaction A-B and then, as chain A interact with B and C 
+
+
 ### Input Files
 
 This program needs an input of PDB files holding the protein pairwise interactions needed to reconstruct the desired macrocomplex. The program can handle those scenarios: 
@@ -92,7 +117,18 @@ This program needs an input of PDB files holding the protein pairwise interactio
 * The same sequence appearing in different PDB files has not to be identical, we can handle 95% of identity. 
 * The same sequence appearing in different files can have different names. 
 
+
+
+
+
+
+
+
 ## Background and algorithm
+
+
+
+
 
 Many proteins consists of several polypeptide chains that assembly into multi-subunit complexes. Such assembly is known
 as the quaternary structure of a protein, and it plays a major role in defining a protein's function, localization and activity. Examples include proteins as important as the nucleosome, the spliceosome or the proteasome, among others. Nevertheless, understanding how individual subunits assemble into larger complexes is no easy task. In this project, we developed a stand-alone application to create multi-subunit complexes out of its individual pairwise interactions. 
@@ -180,8 +216,11 @@ The third example corresponds to the 20S proteasome (pdb id: 1G65). This represe
 python3 multicomplex.py -i example3 -o complexes -st "A1B1C1D1" -f4 -v 
 python3 multicomplex.py -i example3 -o complexes -st "A1B1C1D1E1F1G1" -f4 -v 
 python3 multicomplex.py -i example3 -o complexes -st "A1B1C1D1E1F1G1H1I1J1K1L1M1N1" -f4 -v 
+
 ```
+
 The last example gives exactly half 20S proteasome. However, it took extremely long to execute (~15min). Thus, if one wants to obtain a complex with a great deal of unique chains, it is a wise idea to let the programme run and go have a coffee ;).
+
 
 ## GUI - UNDER DEVELOPMENT
 
