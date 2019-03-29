@@ -195,4 +195,6 @@ We don't apply any optimization method, so there are no option to optimze our mo
 
 ## Next Steps
 
+* It would be a good point to improve the approach in order build the correct shape of the microtubul. 
+
 ## FAQS
