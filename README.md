@@ -64,12 +64,13 @@ At this pont, the directory 4SMacroBuilder should contain the following files an
 
 * README.md, README.pdf: the files containing the tutorial and information about our application.
 * MBlauncher.py: the command-line script to launch the program.
+* Tkinter.py: to launch the GUI.
 * MacroB.py: a module requiered by MBlauncher.py where are defined the classes of the program.
 * CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
 * Tests: a directory with several examples stored in sub-directories that serve as input to the program.
 * Models: an empty folder where the created complexes will be saved.
 * Templates: the raw PDB files from which we extracted the example pairwise interactions.
-* setup.py script
+* setup.py script: to install the program in the python side-packages.
 
 Check that all this information has been correctly downloaded and that there is the script called *setup.py*.
 
@@ -174,20 +175,23 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
   - If the user gives a non-existing or wrong interaction the program ignores it and keeps going.
   - Different ways of executing 4SMAcroBuilder: from command line or with GUI.
   - Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models. Different models are scored in an output file.
-  - Possibility of take 
-
-One of the program advantages is that if the macrocomplex that is building has a specific configuration, pretty much the rest of the examples excluding the microtuble, if the user specifies that wants the macrocomplex with 7 chains but in fact it can only have 4, it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
+  - Possibility to model DNA/RNA - protein interactions if given.
+  - Possibility to limit the number of chains when executing the program.
+  - If the user specifies that wants the macrocomplex with 7 chains but in fact the model has only 4 chains (i.e. Hemoglobin), it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
 
 
 ## Limitations
+
+
 One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtubul folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
 
 We did a series of test normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 4 interactions by chain. 
 
 As it can be seen in the following graph, the program follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run.
 
-ATP sintasa is a clear example of a complex with a high number of interactions but a low number of atoms.
-* 
+Due to some aspects of our approach, some "infinite" structures as the microtubule is not modeled as expected. This could be possibly due to a random behavior when superposing different chains. 
+
+We don't apply any optimization method, so there are no option to optimze our model once it's finished. 
 
 ## Next Steps
 
