@@ -6,7 +6,6 @@
 ## **Index**
 
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-- [Index]
 - [4SMacroBuilder](#4smacrobuilder)
 - [Software Requirements](#software-requirements)
 - [Download and Installation](#download-and-installation)
