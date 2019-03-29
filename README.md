@@ -103,15 +103,15 @@ Be sure to have the dependencies previously stated.
 ### Algorithm implementation
 
 
-The aim of this project is to build a protein macrocomplex (quaternary structure) with a single previous knowledge: a set of know protein pairwise interacions. Consider a protein assembly with uncertainties on the shape and/or the position of its constituting protein subunits. Know let's suppose that we know that there are the following protein - protein interactions: 
+The aim of this project is to build a protein macrocomplex (quaternary structure) with a single previous knowledge: a set of know protein pairwise interacions. Let's suppose that we know that there are the following protein - protein interactions: 
 
-  * A-B
-  * A-C
-  * B-D
+                    Image 1 
 
-  *Here A,B,C and D are chains or subunits of the macrocomplexe and may differ in sequence and structure*. 
+  >![Img1](antes.png "Title"){width=50.3%} 
 
-We could start taking one of these pair interactions as a template (i.e. A-B), and then superpose the rest of the interactions by protein superposition. In protein macrocomplexes there are several chains that interact with more than one chain, allowing the rest of interactions to be done. Assuming that at least one chain of the template has another interaction (in this example A-C), we can align the simillar chains in order to move the new pair interaction to the template, imposing the condition that the same chains are structurally superposed. Therefore, we would obtain a resulting structure of three chains (C-A-B). The next step would follow the same idea, but this time the tample would be the output of the first iteration (chains C-A-B), so we could keep superposing the simillar chains and moving the new pair interaction to the resulting template in previous iteration. Finally we would obtain the final resulting macrocomplex.
+  *Here A,B,C are chains/subunits of the macrocomplexe and may differ in sequence and structure*. 
+
+In protein macrocomplexes there are several chains that interact with more than one chain, allowing the rest of interactions to be done. We could start taking one of these pair interactions as a template (i.e. A-B), and then superimpose the rest of the interactions by protein superposition. We have to assume that at least one chain of the template interact with another subunit (in this example A-C). This way we could superpose those identical chains (A-A) and move the new pair interaction to the template. Therefore, we would obtain a resulting structure of three chains (C-A-B). If we repeat this process until all the simillar chains are superposed we would obtain the final macrocomplex.
 
 **images**
 
@@ -135,8 +135,8 @@ And know, when we read the PDB files, for each chain we store the interacting re
 
 For instance:
 
-               A -> [(1,2,3),(8,9,10)]       -> model A-B
-                 -> [(15,16),(22,23,24,25)]  -> model A-C
+               A -> (1,2,3) --> model A-B
+                 -> (15,16) --> model A-C
 
                B -> [(5,6,9),(13,15,17)]     -> model A-B
                  -> [(24,25,28),(33,34)]     -> model B-D
