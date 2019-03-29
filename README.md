@@ -14,12 +14,10 @@
 - [Tutorial](#tutorial)
   - [Command line arguments](#Command-line-arguments) 
   - [GUI](#gui)
-- [Examples](#Examples)
-  - [Example 1](#Example-1)
-  - [Example 2](#Example-2)
-  - [Example 3](#Example-3) 
-  - [Example 4](#Example-3) 
-  - [Example 5](#Example-3)  
+- [Analysis of examples](#Analysis of examples)
+  - [Proteosome](#Proteosome)
+  - [Enterovirus](#Enterovirus)
+  - [Nucleosome](#Nucleosome) 
 - [Strong Points](#strong-points)
 - [Limitations](#Limitations) 
 - [Next steps](#Next-steps)
@@ -31,15 +29,14 @@
 
 ### 4SMacroBuilder
 
-4SMacroBuilder is an stand-alone python3 program developed by Pau Badia i Monpel, Altaïr C. Hernández and Natàlia Segura Alabart that builds protein macrocomplexes taking a set of protein-protein interactions. This software is also able to construct macrocomplexes with DNA or RNA interactions, and could serve to study quaternary structures that are difficult to study *in vivo*.
+4SMacroBuilder is a stand-alone python3 program developed by Pau Badia i Monpel, Altaïr C. Hernández and Natàlia Segura Alabart. It builds protein macrocomplexes taking a set of protein-protein, protein-RNA, protein-DNA, RNA - DNA, RNA - RNA, and/or DNA - DNA interactions. This software could serve to study quaternary structures that are difficult to study *in vivo*.
 
-Below is shown how to install and use this program as a standalone command line script(executing the script *MacroB.py*) or with the Graphical User Interface (*tkinter.py*).
-
+Below is shown how to install and use this program as a standalone command line script (executing the script *MacroB.py*) or with the Graphical User Interface (*tkinter.py*).
 
 
 ### Software Requirements
 
-To run 4SMacroBuilder with all its functionalities some software versions are required, those we used to test the program.
+These are the software and its versions required for the 4SMacroBuilder functionality and execution:
 
   * [Python 3.6](https://www.python.org/downloads/)
   * [Biopython](http://biopython.org/wiki/Download)
@@ -47,16 +44,16 @@ To run 4SMacroBuilder with all its functionalities some software versions are re
   * os
   * sys 
   * numpy 
+  * [Pymol](https://pymol.org/2/)
 
 For the GUI the following ones are also necessary:
 
   * [Tkinter (for the GUI interface)](https://wiki.python.org/moin/TkInter)
-  * [Pymol](https://pymol.org/2/)
 
 
 ## Download and Installation
 
- You can download our package using Git with the next command. We also recommend creating a directory named "Models":
+You can download our package using Git with the next command. We also recommend creating a directory named "Models":
  
 ```bash
   $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
@@ -92,9 +89,9 @@ Be sure to have the dependencies previously stated.
 
 This program needs an input of PDB files holding the protein pairwise interactions needed to reconstruct the desired macrocomplex. The program can handle those scenarios: 
 
-* The same sequence appearing in different PDB files has not to be identical, we can handle 95% of identity. 
-* The same sequence appearing in different files can have different names. 
-* Repeated chain interactions are not requiered as inputs (i.e. interaction A-A 10 times is treated as a single PDB). It solves        infinite structures (i.e. Microtubul).
+* The same sequence appearing in different PDB files has not to be identical, it can handle up to 95% of identity. 
+* The same sequence appearing in different files with the same or different names. 
+* Repeated chain interactions are not requiered as inputs (i.e. interaction A-A 10 times is treated as a single PDB). It solves infinite structures (i.e. Microtubul).
 
 
 ## Tutorial
@@ -124,35 +121,48 @@ In this section we make a brief explanation of how to use 4SMacroBuilder.
       -d, --dirty           Generates an output file for each added chain to track
                             how the program builds the complex
       -v, --verbose         Shows what the program is doing
-
 ```
 
 ### GUI
 
-Another way to use the program is using the the GUI. To do so just run the following command:
+Another way to use the program is using the the GUI. To do so run the following command:
 
 
 ```bash
-
 $ Tkinter.py
-
 ```
 For a detailed explanation of how to use the GUI check the *report.pdf*
 
 To get a better understanding of how to run the programme properly, we show different examples that represent different inputs that may be provided. The main aspects that may differ the inputs are: number of different chain interactions and number of atoms of the whole macrocomplex.
 
 
-## Examples
+## Analysis of examples
 
-### Example 1
+Using the template argument. The program can compare between the model it's created and a given template. Using this we can analyse the quality of some reconstructed macrocomplexes.
 
-### Example 2
+number of template differences, conta el nombre de diferents cadenes. 
+parser.add_argument('-t', dest='template', action="store", type=str, default=None, help="To discriminate against different models, a template can be given to calculate the RMSD")
 
-### Example 3
+### Proteosome
 
-### Example 4
+1pma is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins.
+Throught our template analysis we do not see any differences with respect the number of chains between the one created and the template. Further analysis is done by structural visual comparison using an interactive visualization and molecular structural analysis programm such as UCSF CHIMERA ( image ***XX***). We can't oberve any differences in their structure, the superposition done is totally perfect. 
+<p align="center">
+  <img src="/proteosome.png" width="450"/>
+</p>
 
-### Example 5
+
+### Enterovirus
+
+3j23 is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). 
+Giving a set of protein-protein interactions, 4SMacroBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both(image ***XX AND YY***).   
+<p align="center">
+  <img src="/3j23_enterovirus.png" alt="template image" width="450"/>
+  <img src="/enterovirus.png" alt="model created" width="450"/>
+</p>
+
+### Nucleosome
+
 
 
 ## Strong Points
@@ -160,14 +170,23 @@ To get a better understanding of how to run the programme properly, we show diff
 * The algorithm is implemented in such a way that the final output is given in a very fast way. This is due to use an interaction check-list while reconstructing the macrocomplex (*see documentation*). 
 * The program accepts a wide range of input types: 
   - The input names does not affect to the output (i.e. if all PDB files are named XY.pdb).
-  - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtubul, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in microtubul).
-  - In case the user gives a non-existing or wrong interaction the program ignores it and keeps going.
+  - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtubul, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtubul).
+  - If the user gives a non-existing or wrong interaction the program ignores it and keeps going.
   - Different ways of executing 4SMAcroBuilder: from command line or with GUI.
   - Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models. Different models are scored in an output file.
   - Possibility of take 
 
-## Limitations
+One of the program advantages is that if the macrocomplex that is building has a specific configuration, pretty much the rest of the examples excluding the microtuble, if the user specifies that wants the macrocomplex with 7 chains but in fact it can only have 4, it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
 
+
+## Limitations
+One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtubul folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
+
+We did a series of test normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 4 interactions by chain. 
+
+As it can be seen in the following graph, the program follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run.
+
+ATP sintasa is a clear example of a complex with a high number of interactions but a low number of atoms.
 * 
 
 ## Next Steps
