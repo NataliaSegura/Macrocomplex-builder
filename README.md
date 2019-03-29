@@ -118,15 +118,28 @@ The aim of this project is to build a protein macrocomplex (quaternary structure
   </div>
 
 
-In protein macrocomplexes there are several chains that interact with more than one chain, allowing the rest of interactions to be done. We could start taking one of these pair interactions as a template (i.e. A-B), and then superimpose the rest of the interactions by protein superposition. We have to assume that at least one chain of the template interact with another subunit (in this example A-C). This way we could superpose those identical chains (A-A) and move the new pair interaction to the template. Therefore, we would obtain a resulting structure of three chains (C-A-B). If we repeat this process until all the simillar chains are superposed we would obtain the final macrocomplex.
+In protein macrocomplexes there are several chains that interact with more than one chain, allowing the rest of interactions to be done. We could start taking one of these pair interactions as a template (i.e. A-B), and then superimpose the rest of the interactions by protein superposition. We have to assume that at least one chain of the template interact with another subunit (in this example A-C). This way we could superpose those identical chains (A-A) and move the new pair interaction to the template. Therefore, we would obtain a resulting structure of three chains (in this example). If we repeat this process until all the simillar chains are superposed, then we would obtain the final macrocomplex.
 
-**images**
+In order to carry this out we should know the order in which the program would have to superpose these pair of interactions, to avoid clashes between chains or even to prevent the program to superimpose the same chain more than one time. Also, we should know how many iterations the program would have to achive in order to make the final structure. 
 
-In order to carry this out we should know the order in which the program would have to superpose these pair of interactions, in order to avoid clashes between chains or even to prevent the program to superimpose the same chain more than one time. Also, we should know how many iterations the program would have to achive in order to make the final structure. 
+This could be solved in different ways. For instance, starting with one pair of interactions as template it could checked all the possible interactions in each iteration an see which candidate would satisfy the problem statement(exhaustive search algorithm). Although this approach would be simple to implement, it would have a computational cost proportional to the number of candidate solutions, which would tend to grow in an exponential way.  
 
-This could be solved in different ways. For instance, starting with one pair of interactions as template one could check all the possible interactions in each iteration an see which candidate would satisfy the problem statement(exhaustive search algorithm). Although this approach would be simple to implement, it would have a computational cost proportional to the number of candidate solutions, which would tend to grow in an exponential way.  
+We approached this limitation focusing on the interacting residues of each subunit. If we imagine the whole macrocomplex structure as a lego puzzle, then we could realize that each chain has some residues that are interacting with at least another chain (hydrophobic residues) and the rest of the residues that are exposed to the solvent environment (hydrophilic residues). 
 
-We approached this limitation basing on the interacting residues of each subunit. If we imagine the whole macrocomplex structure as a lego puzzle we could realize that each chain has some residues that are interacting with at least another chain (hydrophobic residues) and the rest of the residues that are exposed to the solvent environment (hydrophilic residues). If we base on that premise, we could store those interacting residues for each chain, as well as the corresponding chain those residues are interacting with. This is possible as we have this informations in the PDB files, so that would be the first task to do. In that way we could force the program to check in each iteration/superimposition whether those residues are interacting or not. At the same time we would have to consider as feasible complexes those that has no clashes when superimposed, which means that the backbone of the model that is been superimopsed is not interacting with the rest of the complex already joined (this means a threshold distance of 2 Aº).   
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/approach2.png" alt="approach2_image" style="width:600px;height:500px">
+        <div class="caption">
+          <h4><b>Figure 2</b></h4>
+          <p><i>As we can see, the residues indicated by the arrow are *hydrophobic*, while the rest are hydrophilic.</i></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+If we base on that premise, we could store those interacting residues for each chain, as well as the corresponding chain those residues are interacting with. This is possible as we have this informations in the PDB files, so that would be the first task to do. In that way we could force the program to check in each iteration/superimposition whether those residues are interacting or not. At the same time we would have to consider as feasible complexes those that has no clashes when superimposed, which means that the backbone of the model that is been superimopsed is not interacting with the rest of the complex already joined (this means a threshold distance of 2 Aº).   
 
 Then, our program would start to structurally superimpose structures with at least two identical subunits (those that share a pairwise sequence identity >= 95%), but this time for each model the program knows how many interacting sites are in each protein, and even with which specific chain has to interact on those sites. 
 
