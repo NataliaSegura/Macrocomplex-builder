@@ -108,7 +108,7 @@ The aim of this project is to build a protein macrocomplex (quaternary structure
 <div class="row">
     <div class="col-md-12">
       <div class="thumbnail">
-        <img src="//approach1.png" alt="approach1_image" style="width:600px;height:500px">
+        <img src="/approach1.png" alt="approach1_image" style="width:600px;height:500px">
         <div class="caption">
           <h4><b>Figure 1</b></h4>
           <p><i>Here A,B,C are chains/subunits of the macrocomplexe and may differ in sequence and structure</i></p>
