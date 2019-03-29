@@ -127,7 +127,7 @@ This could be solved in different ways. For instance, starting with one pair of 
 We approached this limitation focusing on the interacting residues of each subunit. If we imagine the whole macrocomplex structure as a lego puzzle, then we could realize that each chain has some residues that are interacting with at least another chain (hydrophobic residues) and the rest of the residues that are exposed to the solvent environment (hydrophilic residues). 
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" align="center">
       <div class="thumbnail">
         <img src="/approach2.png" alt="approach2_image" style="width:600px;height:500px">
         <div class="caption">
