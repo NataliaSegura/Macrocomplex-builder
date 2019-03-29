@@ -168,7 +168,7 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
 
 ## Strong Points
 
-* The algorithm is implemented in such a way that the final output is given in a very fast way. This is due to use an interaction check-list while reconstructing the macrocomplex (*see documentation*). 
+* The algorithm is based in a dynamic programming implementaton, in such a way that the final output is retrived in a very short time. This is due to the fact tha we use the interactions between chains as a previous knowlege to solve the final problem (*see documentation*). 
 * The program accepts a wide range of input types: 
   - The input names does not affect to the output (i.e. if all PDB files are named XY.pdb).
   - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtubul, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtubul).
