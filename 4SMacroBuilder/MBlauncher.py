@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from MacroB import build_macrocomplex
 from argparse import ArgumentParser
 import sys
