@@ -18,5 +18,5 @@ setup(
 	              "License :: OSI Approved :: MIT License",
                 "Operating System :: OS Independent"],
     scripts=[
-              4SMacroBuilder/MBlauncher.py ],
+              "4SMacroBuilder/MBlauncher.py" ],
 )
