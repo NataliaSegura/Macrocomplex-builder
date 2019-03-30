@@ -14,7 +14,7 @@
 - [Tutorial](#tutorial)
   - [Command line arguments](#Command-line-arguments) 
   - [GUI](#gui)
-- [Analysis of examples](#Analysis of examples)
+- [Analysis of examples](#Analysis-of-examples)
   - [Proteosome](#Proteosome)
   - [Enterovirus](#Enterovirus)
   - [Nucleosome](#Nucleosome) 
