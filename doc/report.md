@@ -58,8 +58,98 @@ The superimposition starts with the chain with more interactions, to avoid start
 
 This approach works also with DNA and RNA interactions, as we just checked the atomic position of each structure 
 
+### Strong Points
+
+*1*. **Dynamic programming implementation**
+
+The algorithm is based in a dynamic programming implementaton, in such a way that the final output is retrived in a very short time. This is due to the fact tha we use the interactions between chains as a previous knowlege to solve the final problem (*see documentation*). 
+
+*2*. **Input managing**
+
+  - The input names does not affect to the output (i.e. if all PDB files are named XY.pdb).
+  - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtuble, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtuble).
+  - If the user gives a non-existing or wrong interaction the program ignores it and keeps going.
+
+*3*. **Obtain different models**
+
+Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models. Different models are scored in an output file.
+
+*4*. **Launching the program with GUI**
+
+MacrocomplexBuilder can be launched from command line or with the **Graphical User Interface** (GUI). Besides, the GUI offer the advantatge to obtain a Pymol image of the final model, without the requirement of opening pymol.
+
+*5*. **DNA & RNA interactions**
+ 
+Possibility to model DNA/DNA, RNA/RNA, DNA/RNA, DNA/protein and RNA/protein interactions and retrieve a quick output (i.e. when modeing the ribosome).
+
+*6*. **Modifiable number of chains in the final model**
+
+Possibility to limit the number of chains when executing the program. Besides, if the user specifies that wants the macrocomplex with 7 chains but in fact the model has only 4 chains (i.e. Hemoglobin), it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
+
+*7*. **Heteroatoms and water matter**
+
+The active site of a protein often is composed by anions and cations. This information is described in the heteroatoms. MacrocomplexBuilder can use the heteroatom and water coordinates and information to construct the macrocomplex so we are not losing biological information. 
+
+## Limitations
+
+*1*. **Increase of the computational cost with number of atoms in macrocomplex**
+
+As it can be seen in the *Figure 4*, the programs follows an exponential curve. The more atoms and interactions it has to check, the longer it takes to process.
+
+*2*. **Microtuble modeling**
+
+Another factor that limit our program is that, due to some aspects of our approach, some "infinite" structures are not modeled as expected, like the microtuble. This is possibly due to a random behavior implemented in the algorithm when adding subunits to the macrocomplex. 
+
+*3*. **Different solutions**
+
+Although the program can be asked to build more than one model from the same input, it is not able to deduce and build more than one output when there could be more than one possible solution. 
+
+*4*. **The ATP problem and global stechiometry**
+
+The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way. 
+
+The aim of the optional argument stechiometry is to solve the ATP problem. In that way, the problem ....
+
+#### GUI
+
+Another way to use the program is using the the GUI. To do so run the following command:
+
+```bash
+$ MB_GUI.py
+```
+>![**GUI structure:**Here is the main structure of the GUI. First there is the Options widged where the user can select what parammeters to use for the modeling. Then there is the console panel where both the stderr and stdout will be shown, if the user wants more information there is the option verbose which will print each action that the program does. Next there is the Sequence widget, where the model sequences and their id's will be shown. At its bottom, there's the Structure composition panel where the model's chain composition is shown. Finally, a n image of the resulting model is shown at the bottom. (For Sequence, Structure and Image, all of the information shown is from the first model).](../images/whole_GUI.png "approach_explanation_image"){width=50.3%}   
 
 
+To use the program, first a directory must be selected. One can do this by going to File>Select Directory:
+
+>![**Selecting a directory:** To correctly select an input directory, the user must enter INSIDE the directory in the navigation window and press OK.](../images/selecting_directory.png "approach_explanation_image"){width=50.3%}
+
+
+Then, the user can change any of the options in the option panel, let's make just one model of a Proteosome to show it really works and select the option verbose to see what the program is doing. We press RUN to tun the program:
+
+>![**Modify options before run:** Here the model will make just one model, with the name proteasoma_1.cif and without checking structure composition.](../images/options_before_run.png "approach_explanation_image"){width=50.3%}
+
+
+Finally we can see how the program has build this proteasoma really fast. 
+
+>![**Final result:** The sequence, structure composition, structure and console have been updated.](../images/final_result.png "approach_explanation_image"){width=50.3%}
+
+
+## Next Steps
+
+*What could be the next future improvements?*
+
+*1*. **Model Energy Minimization**
+
+It could be implemented an option of energy optimization to a local energy minimum by molecular dynamics once the model/s has been finished. Protein structures often have errors of various magnitude: atoms overlapping, wrong side chain orientation (lack of water molecules when modeling). An energy minimization would look for the pathway that reduces the most in the overall energy of the system, obtaining a best approach of the final structure if possible. It could be reached with programs as **Amber**, that combines molecular mechanical force fields with biomolecular simularions. 
+ 
+*2*. **Microtuble modeling**
+
+It would be a good point to modify the algorithm approach which could improve the correct shape of the microtuble, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
+
+*3*. **ATP Synthase modeling**
+
+The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. THat way, we limit the interactions and we force the macrocomplex into a specific shape. One way to do it could be that given a template, the program calculates the stechiometry and use it to create the model.
 
 ### References
 
@@ -73,15 +163,3 @@ Jeffrey, George A.; An introduction to hydrogen bonding, Oxford University Press
 Values of Vanderwalls radius taken from: http://ww2.chemistry.gatech.edu/~lw26/structure/molecular_interactions/mol_int.html
 Batsanov S.S.; Van der Waals Raddi of Elements, Inorganic Materials, 2001.
 
-### Pandoc 
-
-```bash
-    pandoc -f markdown+pandoc_title_block   \
-           -t latex                         \
-           --variable papersize:a4paper     \
-           --variable geometry:margin=1.5cm \
-           --variable fontsize=10pt         \
-           --highlight-style pygments       \
-           -o report.pdf \
-              report.md
-```
