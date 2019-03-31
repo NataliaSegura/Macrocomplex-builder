@@ -214,6 +214,7 @@ Finally we can see how the program has build this proteasoma really fast.
       </div>
     </div>
   </div>
+  
 ### Analysis of examples
 
 To get a better understanding of how to run the programme properly, we show different examples that represent different inputs that may be provided. The main aspects that may differ the inputs are: number of different chain interactions and number of atoms of the whole macrocomplex.
@@ -244,6 +245,7 @@ This is a clear example of one of the strong points of our program: given 8 inte
       </div>
     </div>
   </div>
+  
 #### Proteosome
 
 The 1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
