@@ -51,12 +51,12 @@ For the GUI the following ones are also necessary:
 
 ### Download and Installation
 
-In order to be able to use all the scprits provided in MacrocomplexBuilder the user has to install the package in the python site-packages.
-+
+You can download our package using Git with the next command:
+ 
 ```bash
-   $ sudo python3 setup.py install
-```
-Be sure to have the dependencies previously stated.
+  $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
+  $ cd MacroBuilder
+ ```
 
 #### Package tree
 
@@ -66,7 +66,7 @@ The package has the following structure:
       README.md
       README.pdf
       setup.py
-      MacroBuilder/
+      MB/
           __init__.py
           MacroB.py
           CustomPDB.py
@@ -79,10 +79,37 @@ The package has the following structure:
           nucleosome/
           phosphate/
           proteasome/
-      templates/
-          **all templates**
+      Templates/
+          3j23_enterovirus/
+          1a3n_hemo/
+          5syg_microtuble/
+          3kuy_nucleosome/
+          2f1d_phosphate/
+          1pma_proteosome/
       doc/
           report.md
+
+* README.md, README.pdf: the files containing the tutorial and information about our application.
+* MB: a fold with the following scripts:
+  - MBlauncher.py: the command-line script to launch the program.
+  - MacroB.py: a module requiered by MBlauncher.py where are defined the classes of the program.
+  - CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
+  - MB_GUI.py: a module to launch the Graphical User Interface.
+* Examples: a directory with several examples stored in sub-directories that serve as input to the program.
+* Models: an empty folder where the created complexes will be saved.
+* Templates: the raw PDB files from which we extracted the example pairwise interactions.
+* setup.py script: to install the program in the python side-packages.
+* doc: a folder with the report.
+
+Check that all this information has been correctly downloaded and that there is the script called *setup.py*.
+
+In order to be able to use all the scprits provided in MacrocomplexBuilder the user has to install the package in the python site-packages.
+
+```bash
+   $ sudo python3 setup.py install
+```
+Be sure to have the dependencies previously stated.
+
 
 
 ### Input Files
@@ -94,10 +121,6 @@ This program needs an input of PDB files holding the protein pairwise interactio
 * Repeated chain interactions are not requiered as inputs (i.e. interaction A-A 10 times is treated as a single PDB). It solves infinite structures (i.e. *Microtuble*).
 * Pairwise interactions wrongly given to the program. The program threshold for considering two chains as interacting together is 3.5 Amstrongs. If the user gives interactions with bigger distance, they are not considered as such.
 * A template PDB file containing the structure of the model to use it as a guideline.
-
-
-All the models that only have protein - protein interactions can be dispalyed with both USCF CHIMERA and Pymol but when the model has nucleic acid interactions it must be opened with Pymol.
-
 
 ### Tutorial
 
@@ -167,6 +190,7 @@ This is a clear example of one of the strong points of our program: given 8 inte
       </div>
     </div>
   </div>
+  
 #### Proteosome
 
 The 1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
@@ -217,7 +241,7 @@ MacrocomplexBuilder is able to create this protein - nucleic acid macrocomplex w
         </div>
       </div>
     </div>
-</div>
+  </div>
 
 ### Strong Points
 
@@ -288,8 +312,11 @@ Although the program can be asked to build more than one model from the same inp
 
 *4*. **The ATP problem and global stechiometry**
 
-The problem with the ATP synthase macrocomplex is the number of interactions it has. The program can't handle all of them to create it and the wrong model is built. A way to modify the algorithmic approach is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way because we are forcing the right number of chains but not whose interactions are in each one.
+The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way. 
 
+
+
+The aim of the optional argument stechiometry is to solve the ATP problem. In that way, the problem 
 
 ## Next Steps
 
