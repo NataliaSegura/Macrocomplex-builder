@@ -3,7 +3,7 @@
 from MB.MacroB import build_macrocomplex
 from argparse import ArgumentParser
 
-parser = ArgumentParser(description='4SMacroBuilder is a python program designed to generate macrocomplex structures from simple pair inetractions pdb files.')
+parser = ArgumentParser(description='MacrocomplexBuilder is a python program designed to generate macrocomplex structures from simple pair inetractions pdb files.')
 
 stech = parser.add_mutually_exclusive_group()
 parser.add_argument("-i",
