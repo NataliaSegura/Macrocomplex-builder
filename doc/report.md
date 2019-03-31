@@ -31,17 +31,16 @@ Macrocomplexes are built with an specific spatial order of subunits interacting 
 
 If we start from scratch to reconstruct a complex of subunits we need to know at least the number of chains that will build that macrostructure. 
 
+>![**Here A,B,C are chains/subunits of the macrocomplex and may differ in sequence and structures**](../images/approach.png "approach_explanation_image"){width=50.3%}   
+
+
 In protein macrocomplexes there are several chains that interact with more than one chain, allowing the rest of interactions to be done. We could start by taking one of these pair interactions as a template (i.e. A-B), and then superimpose the rest of the interactions by protein superposition. We have to assume that at least one chain of the template interact with another subunit (in this example A-C). This way we could superpose those identical chains (A-A) and move the new pair interaction to the template. Therefore, we would obtain a resulting structure of three chains (*Figure 1*). If we repeat this process until all the simillar chains are superposed, then we would obtain the final macrocomplex.
 
-In order to carry this out we should know the order in which the program would have to superpose these pair of interactions. The order is needed to avoid clashes between chains or even to prevent the program to superimpose the same chain more than onece. Also, we should know how many iterations the program would have to achive in order to make the final structure. 
+In order to carry this out we should know the order in which the program would have to superpose these pair of interactions. The order is needed to avoid clashes between chains or even to prevent the program to superimpose the same chain more than once. Also, we should know how many iterations the program would have to achive in order to make the final structure. 
 
 This could be solved in different ways. For instance, starting with one pair of interactions as template it could check all the possible interactions in each iteration an see which candidate would satisfy the problem statement. This approach is called exhaustive search algorithm. Although this approach would be the simplest and easiest to implement, it would have a computational cost proportional to the number of candidate solutions, which would tend to grow in exponentially.  
 
 Below is explained how did we deal with this problem, as well as the approach we followed.
-
-
-![Here A,B,C are chains/subunits of the macrocomplex and may differ in sequence and structures](../images/approach.png "approach_explanation_image"){width=50.3%}
-        
 
   
 ### Algorithm implementation
@@ -49,12 +48,17 @@ Below is explained how did we deal with this problem, as well as the approach we
 
 We approached the exhaustive search algorithm by focusing on the interacting residues of each subunit. If we imagine the whole macrocomplex structure as a lego puzzle, then we would realize that each chain has some residues that are interacting with at least another chain (*hydrophobic residues*) and the rest of the residues that are exposed to the solvent environment (*hydrophilic residues*). 
 
-Basing on that premise, we stored the interacting residues for each chain, as well as the corresponding chain those residues are interacting with.  These takes place by looking for those residues that are in no larger that 5 Amstrongs distance. This is possible because we have this information in the PDB files, so that would be the first task to do. In that way we could force the program to check in each iteration/superimposition whether those residues are interacting or not. At the same time, we would have to consider as feasible complexes those that has no clashes when superimposed, which means that the backbone of the model that is been superimopsed is not interacting with the rest of the complex already joined - a threshold distance of 2 Amstrongs.   
+Basing on that premise, we store the interacting residues for each chain, as well as the corresponding chain those residues are interacting with. We did this by looking for those residues that are in no larger that 5 Amstrongs distance(*reference*). In that way force the program to check in each iteration/superimposition whether those residues are interacting or not. At the same time, we consider as feasible complexes those that have no clashes when superimposed, which means that the backbone of the model that is been superimopsed is not interacting with the rest of the complex already joined, with a threshold distance of 2 Amstrongs(*reference*).   
 
 Then, our program would start to structurally superimpose structures with at least two identical subunits (those that share a pairwise sequence identity bigger or equal to 95%). For each model the program knows how many interacting sites are in each protein, and even with which specific chain has to interact on those sites. 
 
-And know, when we read the PDB files, for each chain we load into memory the interacting residues. Besides, we store in the same set which is the model of the corresponding interaction, so that we know which is the model to superimpose later. At the end we will have a dictionary with each chain as key and all the information as values: interacting residues, interacting chain pair names, interacting residues for the other chain. Once we have this we update the interaction dictionary of each chain inside the dictionary to have the information in it. One point to remark is that when the updating is done the same interaction is not inserted twice or more.
-The superimposition will start with the chain with more interactions, to avoid starting for a wrongly given interaction that just interact with itself and once the initial model is chosen the rest will be randomly added. When the superposing occurs we use an internal checklist to know for each chain which interactions are done and which ones are to be checked and superimposed. But if a chain appears more than once in the complex, each of them will have its checklist to complete. That way we ensure that all interactions are done.
+And know, when we read the PDB files, for each chain we load into memory the interacting residues. Besides, we store in the same set which is the model of the corresponding interaction, so that we know which is the model to superimpose later. At the end we obtain a dictionary with each chain as key and all the information as values: interacting residues, interacting chain pair names and interacting residues for the other chain. Once this repository is made, we make a function in order to update the interaction dictionary of each chain, in order to ensure that all the interactions are corrcetly collected in it. One point to remark is that when the updating is done, in case of finding an interaction already saved in the dictionary, this is not inserted again.
+
+The superimposition starts with the chain with more interactions, to avoid starting for a wrongly given interaction that just interact with itself. Once the initial model is chosen, we implemented a random behavior to allow the rest of models to be randomly added. One of the main aspects of our approach that makes it as fast is the use of an internal check list when the superposing occurs. This allow the program to know, for each chain, which interactions are done and which ones are still remain to be checked and superimposed. However, if a chain appears more than once in the complex, each of them will have its checklist to complete. That way we ensure that all interactions are correctly done.
+
+This approach works also with DNA and RNA interactions, as we just checked the atomic position of each structure 
+
+
 
 
 ### References
