@@ -5,6 +5,7 @@ from Bio.pairwise2 import align
 import random
 import sys
 from CustomPDB import CustomModel, CustomChain
+import os
 
 
 def read_pdbs(directory, verbose=False):
@@ -12,81 +13,120 @@ def read_pdbs(directory, verbose=False):
     if verbose:
         print("Reading pdb input files from %s" % directory)
     parser = PDBParser(PERMISSIVE=1, QUIET=True)
-    pdbmodels = [parser.get_structure("Model_pair", directory + f)[0] for f in listdir(directory)]
+    if os.path.isdir(directory):
+        try:
+            pdbmodels = [parser.get_structure("Model_pair", directory + f)[0] for
+                    f in listdir(directory) if f.endswith(".pdb")] #  Generates pdb objects for files that end with .pdb
+        except:
+            sys.stderr.write("PDB files couldn't be opened. Please, revise that their format is correct.")
+            sys.exit(1)
+    else:
+        sys.stderr.write("Directory %s doesn't exists, please select a valid directory." % directory)
+        sys.exit(1)
+    if not bool(pdbmodels):  # If no pdb instance is generated
+        sys.stderr.write("No pdb files where read. Please make sure the given directory contains pdb files. ")
+        sys.exit(1)
+    for model in pdbmodels:
+        if len(model.child_list) != 2:
+            sys.stderr.write("A pdb input file doesn't contains two chains. Please, all input pdbs must only contain "
+                             "two chains.")
+            sys.exit(1)
     if verbose:
         print("Pdb objects stored")
     return pdbmodels
 
 
 def get_new_id(iterator):
-    """Returns a new pdb id that is not in the given iterator"""
+    """Returns a new id that is not in the given iterator"""
     letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ñÑçÇ'
     for l in letters:
         if l not in iterator:
             return l
-    sys.stderr.write("Too many different chains given. The program can handle modeling maximum 66 different sequences")
+    sys.stderr.write("Too many different chains given. The program can only handle modeling"
+                     " a maximum of 66 different sequences")
     exit(1)
 
 
 def has_homolgs(target_seq, known_seqs):
-    """Checks if a given sequence is an homolog of any of the known sequences"""
+    """Checks if a given sequence is an homolog of any of the known sequences and returns it"""
     for k_seq in known_seqs:
-        alignment = align.globalxx(target_seq, k_seq)[0]
-        aln_seq_1 = alignment[0]
-        aln_seq_2 = alignment[1]
+        alignment = align.globalxx(target_seq, k_seq)[0] # Generates and selects the alignment with the best score
+        aln_seq_1 = alignment[0]  # Get the first sequence of the alignment (with - as gaps )
+        aln_seq_2 = alignment[1]  # Get the second one
         al_length = len(alignment[0])
-        ident = sum(base1 == base2 for base1, base2 in zip(aln_seq_1, aln_seq_2))
-        if ident/al_length >= 0.95:
+        ident = sum(base1 == base2 for base1, base2 in zip(aln_seq_1, aln_seq_2))  # Calculate number of identities
+        if ident/al_length >= 0.95:  # If 95% of identity, return known sequence
             return k_seq
 
 
 def unify_ids(pdbmodels, verbose=False):
     """Unifies chain identifiers and updates the pdb models to CustomModel class"""
-    seq_dict = dict()
+    seq_dict = dict()  # Dictionary where sequences are keys and ids are values
     if verbose:
-        print("Unified Ids")
+        print("Unifying Ids")
     for i in range(len(pdbmodels)):
         pdb = pdbmodels[i]
-        model = CustomModel(str(i))
+        model = CustomModel(str(i))  # Transforms model to CustomModel instance
         for chain in pdb:
-            chain = CustomChain(chain)
-            chain.parent = None
+            chain = CustomChain(chain)  # Transforms chain to CustomChain instance
+            chain.parent = None  # Removes previous parent from chain
             chain_seq = chain.get_sequence()
             if chain_seq not in seq_dict:
-                if not seq_dict:
-                    new_id = get_new_id(seq_dict.values())
-                    seq_dict[chain_seq] = new_id
-                    chain.id = new_id
-                else:
+                if not seq_dict:  # If the sequence dictionary is empty
+                    new_id = get_new_id(seq_dict.values())  # Get first id (A)
+                    seq_dict[chain_seq] = new_id  # Set the first sequence as key and A as value
+                    chain.id = new_id  # Also update chain id to A
+                else:  # If dictionary is not empty
                     sequences = seq_dict.keys()
-                    homolog = has_homolgs(chain_seq, sequences)
-                    if homolog:
-                        seq_dict[chain_seq] = seq_dict[homolog]
-                        chain.id = seq_dict[homolog]
+                    homolog_seq = has_homolgs(chain_seq, sequences)  # Check if sequence has homology
+                    if homolog_seq:
+                        homolog_id = seq_dict[homolog_seq]  # Get homolog id from seq_dict
+                        seq_dict[chain_seq] = homolog_id  # Set this sequence with the homolog id as value
+                        chain.id = homolog_id   # Also change chain id to homolog's
                     else:
-                        new_id = get_new_id(seq_dict.values())
+                        new_id = get_new_id(seq_dict.values())  # Otherwise generate a new id
                         seq_dict[chain_seq] = new_id
                         chain.id = new_id
             else:
-                chain.id = seq_dict[chain_seq]
+                chain.id = seq_dict[chain_seq]  # If chain is already in seq_dict, update chain object id
             model.add(chain)
-        pdbmodels[i] = model
+        pdbmodels[i] = model  # Update pdbmodels list with the updated model
     if verbose:
         print("Ids unified")
     return seq_dict
 
 
 def get_interaction_dict(clean_pdbs, verbose=False):
-    """Generates interaction dictionary"""
+    """Generates interaction dictionary. This is a dictionary of dictionaries. Each chain id is the key of the first
+    dictionary, and as value a dictionary. The dictionary inside has tuples of interactiong resiudes (their number)
+    from chain 1 to 2 as keys and for value it has a tuple of chain object 1, chain object 2 and interaction resiudes from 2 to 1:
+    For instance:
+    {Chain1 id : {
+        (first interacting residues number from chain 1 to 2):  (Chain1 instance,
+                                                                Chain2 instance,
+                                                                interacting residues number from chain 2 to 1)
+                                                                }
+        (second interacting resiudes...) : (... , ... , ... )
+        ...
+     Chain2 id : {
+        (first interacting residues number from chain 2 to 1):  (Chain2 instance,
+                                                                (Chain1 instance,
+                                                                interacting residues number from chain 1 to 1)
+        (second interacting resiudes...) : (... , ... , ... )
+        ...
+    """
     interaction_dict = dict()
     if verbose:
         print("Generating interaction dictionary...")
     for pdb in clean_pdbs:
         chain1, chain2 = list(pdb.get_chains())
-        inter1_2, inter2_1 = chain1.get_interactions(chain2)
-        if inter1_2 != ():
-            interaction_dict.setdefault(chain1.id, dict())[inter1_2] = (chain1, chain2, inter2_1)
-        if inter2_1 != ():
+        inter1_2, inter2_1 = chain1.get_interactions(chain2)  # Generates interaction tuples,
+        # from chain 1 to 2 and from 2 to 1. For instance:
+        # inter1_2 = (2,40,120)
+        # inter2_1=(34, 20)
+        if inter1_2 != ():  # If tuple is not empty (there is an interaction)
+            interaction_dict.setdefault(chain1.id, dict())[inter1_2] = (chain1, chain2, inter2_1) # Update dictionary
+        if inter2_1 != ():  # Same for the other interaction
             interaction_dict.setdefault(chain2.id, dict())[inter2_1] = (chain2, chain1, inter1_2)
     if verbose:
         print("Interaction dictionary generated")
@@ -99,14 +139,18 @@ def update_interactions_dict(interaction_dict, verbose=False):
         print("Updating interaction dictionary...")
     for chain in interaction_dict:
         for interaction_tple in interaction_dict[chain]:
-            chain1, chain2, ref_inter = interaction_dict[chain][interaction_tple]
+            chain1, chain2, ref_inter = interaction_dict[chain][interaction_tple] # De-packs the interaction tuple value
+            # Generates a list with all interactions of that key minus the current one
             chain1_filtered_interactions_lst = [x for x in interaction_dict[chain1.id].keys() if x != interaction_tple]
+            # Updates chain_interaction attribute with the list of interaction tuples
             chain1.add_interaction_lst(chain1_filtered_interactions_lst)
+            # Generates a list with all interactions minus the one from chain2 to chain1
             chain2_filtered_interactions_lst = [x for x in interaction_dict[chain2.id].keys() if x != ref_inter]
             chain2.add_interaction_lst(chain2_filtered_interactions_lst)
             parent = chain1.get_parent()
-            parent.child_list = [chain1, chain2]
-            interaction_dict[chain][interaction_tple] = chain1, chain2
+            parent.child_list = [chain1, chain2] # Updates the model chains with these new updated chains
+            interaction_dict[chain][interaction_tple] = chain1, chain2 # Updates the dictionary value
+            # (now without the interaction from chain 2 to 1)
     if verbose:
         print("Interaction dictionary updated")
 
@@ -114,146 +158,192 @@ def update_interactions_dict(interaction_dict, verbose=False):
 def has_clashes(move_atoms, model):
     """Compares the atoms backbone atoms of the moving chain with the backbone atoms of the model"""
     backbone = {"CA", "C1\'"}
-    chain_atoms = [atom for atom in move_atoms if atom.id in backbone]
+    chain_atoms = [atom for atom in move_atoms if atom.id in backbone]  # Gets only the backbone atoms
     model_atoms = [atom for atom in model.get_atoms() if atom.id in backbone]
-    ns = Bio.PDB.NeighborSearch(model_atoms)
+    ns = Bio.PDB.NeighborSearch(model_atoms)  # Generates a neigbour search tree to speed up distance calculations
     clashes = 0
     for atom in chain_atoms:
-        clashes += bool(ns.search(atom.coord, 2))
-    if clashes/len(chain_atoms) >= 0.03:
+        clashes += bool(ns.search(atom.coord, 2))  # If this atom shows clashes, add 1 to the clashes counter
+    if clashes/len(chain_atoms) >= 0.03:  # If more than 3% of atoms show clashes return yes
         return True
-    else:
+    else:  # Otherwise return no
         return False
 
 
 def get_starting_model(interaction_dict, verbose=False):
-    """Returns as a starting model the CustomModel inside any of the interactions of the chain with more interactions"""
+    """Returns as a starting model one of the CustomModel of the chain with more recorded interactions"""
     if verbose:
         print("Selecting best interaction from where to start modeling...")
     max_len = 0
     interaction_key = None
     for key in interaction_dict:
         length = len(interaction_dict[key])
-        if length > max_len:
-            max_len = length
-            interaction_key = key
-    inter_tple = next(iter(interaction_dict[interaction_key]))
+        if length > max_len:  # If a chain has more interactions
+            max_len = length  # Updates maximum interaction umber
+            interaction_key = key  # Updates maximum interaction chain key
+    inter_tple = next(iter(interaction_dict[interaction_key]))  # Gets an interaction tuple of the chain
+    # with more interactions
     if verbose:
         print("First two chains added")
-    return interaction_dict[interaction_key][inter_tple][0].parent.copy()
+    return interaction_dict[interaction_key][inter_tple][0].parent.copy()  # Returns the model of the interaction tuple
 
 
 def generate_model_profile(model):
     """Generates a dictionary with the id chain as key and the number of repetitions of this chain as values"""
-    profile = {}
+    profile = {}  # { "A":1, "B":4, ...}
     for chain in model:
-        profile.setdefault(chain.id, 0)
-        profile[chain.id] += 1
+        profile.setdefault(chain.id, 0)  # If id not in dic, set it to 0
+        profile[chain.id] += 1 # Sum 1 to the counter of the id
     return profile
 
 
-def compare_profiles(model_profile, template_profile):
-    """Compares a given model profile with the template's, returns the number of differences"""
-    score = 0
-    for key, value in model_profile.items():
-        if key in template_profile:
-            if template_profile[key] > value:
-                score += template_profile[key] - value
-            else:
-                score += value - template_profile[key]
-        else:
-            score += value
-    return score
+def save_results(out_models, output):
+    """Saves the resulting models into cif files (at the current working directory"""
+    i = 1
+    print("Saving models...")
+    path = os.getcwd()
+    for model in out_models:  # Saves all models in the current working directory
+        model.save_to_mmCIF(path+"/"+output + "_" + str(i))
+        i += 1
+    print("Done\n")
 
 
-def revaluate_models(model_lst, template, seq_dict, verbose=False):
-    if verbose:
-        print("Re-evaluating models according to given template...")
-    parser = PDBParser(PERMISSIVE=1, QUIET=True)
-    template = parser.get_structure("template", template)[0]
-    template_profile = {}
-    for chain in template:
-        chain = CustomChain(chain)
-        chain_sequence = chain.get_sequence()
-        if chain_sequence in seq_dict:
-            template_profile.setdefault(seq_dict[chain_sequence], 0)
-            template_profile[seq_dict[chain_sequence]] += 1
-    models_profiles = []
-    for model in model_lst:
-        models_profiles.append((compare_profiles(generate_model_profile(model), template_profile), model))
-    models_profiles.sort(key=lambda tup: tup[0])
-    if verbose:
-        print("Models sorted according to given template")
-    return models_profiles
-
-
-def build_macrocomplex(directory, output, max_chains, num_models, template, dirty, verbose):
-    """Main funtion"""
-    print("Program is running, please wait...")
-    in_pdbmodels = read_pdbs(directory, verbose)
-    seq_dict = unify_ids(in_pdbmodels, verbose)
-    interaction_dict = get_interaction_dict(in_pdbmodels, verbose)
-    update_interactions_dict(interaction_dict, verbose)
+def main_loop(num_models, output, seq_dict, interaction_dict, verbose=False, max_chains=100, dirty=False,
+              stoich_dict=False):
+    """Using the interaction dictionary, this function generates macrocomplex model/s. It begins with a template model
+    and starts adding chains until conditions allow. Finally it returns a list of pdb instance models."""
     out_models = []
-    for i in range(1, num_models+1):
-        print("Macrocomplex "+str(i)+" ...")
-        macrocomplex = get_starting_model(interaction_dict, verbose).copy()
-        macrocomplex.id = "Model_"+str(i)
-        run = True
-        num_of_chains = 2
-        num_empty_chains = 0
+    for i in range(1, num_models + 1):
+        print("Macrocomplex " + str(i) + " ...")
+        macrocomplex = get_starting_model(interaction_dict, verbose).copy()  # Selects a starting model
+        model_stoich = generate_model_profile(macrocomplex)  # Generates the stoichometry of the first two chains
+        macrocomplex.id = "Model_" + str(i)
+        run = True  # WHile this variable is true, the program will keep trying to add chains to the macrocomplex
+        num_of_chains = 2  # The model starts with 2 chains already
+        num_empty_chains = 0  # NUmber of chains that have all their interactions depleted
         while run:
-            for chain in macrocomplex:
-                if num_of_chains < max_chains:
-                    if chain.interactions:
-                        random.shuffle(chain.interactions)
+            for chain in macrocomplex:  # Iterates the macrocomplex chains
+                if num_of_chains < max_chains:  # If the number of chains still hasn't reached the maximum allowed
+                    if chain.interactions:  # If this chain still has pending interactions
+                        random.shuffle(chain.interactions)  # Shuffle the interactions list (to avoid
+                        # repetitive behaviour)
                         for inter_tple in chain.interactions:
-                            fix, to_move = interaction_dict[chain.id][inter_tple]
-                            sup = Bio.PDB.Superimposer()
-                            chain_atoms, fix_atoms = chain.get_common_atoms(fix)
-                            sup.set_atoms(chain_atoms, fix_atoms)
-                            move = to_move.copy()
+                            if stoich_dict:  # If there is stoichometry input (either as stirng or template pdb)
+                                target_chain_id = interaction_dict[chain.id][inter_tple][1].id  # chain to be added
+                                if target_chain_id in model_stoich:  # If it's in the stoich model profile
+                                    model_number_chain = model_stoich[target_chain_id]  # Get the number of repetitions
+                                    # of this chain
+                                else:
+                                    model_number_chain = 0  # Otherwise it means it's still not in the model
+                                if stoich_dict[target_chain_id] <= model_number_chain:  # If the number of this target
+                                    # chain would surpass the stoichemestry given, don't add the chain and
+                                    if verbose:
+                                        print("(S) Chain NOT added: interaction " + chain.id + ": " +
+                                            str(inter_tple[:1]) + " ... " + str(inter_tple[-1]) + " to " + target_chain_id)
+                                        continue # jump to the next interaction tuple
+                            fix, to_move = interaction_dict[chain.id][inter_tple]  # Get the interaction chain instances
+                            sup = Bio.PDB.Superimposer()  # Generates a superimposer instance
+                            chain_atoms, fix_atoms = chain.get_common_atoms(fix) # Get common atoms between the
+                            # macrocomplex chain and the one in the interaction dictionary
+                            sup.set_atoms(chain_atoms, fix_atoms)  # Generate the superposition
+                            move = to_move.copy()  # Make a copy of the chain to move
+                            sup.apply(move)  # Apply superposition matrix
                             move_atoms = sorted(move.get_atoms())
-                            sup.apply(move_atoms)
-                            if not has_clashes(move_atoms, macrocomplex):
+                            # Now it checks if the target chain has clashes with the model
+                            if not has_clashes(move_atoms, macrocomplex):  # If it hasn't
                                 if verbose:
-                                    print("Chain " + str(num_of_chains) + " added: interaction "+chain.id+": " +
-                                          str(inter_tple[0])+" ... "+ str(inter_tple[-1]) + " to "+move.id)
-                                move.parent = None
-                                macrocomplex.add(move)
+                                    print("Chain " + str(num_of_chains) + " added: interaction " + chain.id + ": " +
+                                          str(inter_tple[0]) + " ... " + str(inter_tple[-1]) + " to " + move.id)
+                                move.parent = None  # Sets the parent to none to evade biopython's strict id policy
+                                macrocomplex.add(move)  # Adds the target chain to the model
+                                model_stoich.setdefault(move.id, 0)  # Updates stoich dict
+                                model_stoich[move.id] += 1
                                 num_of_chains += 1
-                                if dirty:
-                                    macrocomplex.save_to_mmCIF(output+"_tmp_"+str(num_of_chains))
-                            elif verbose:
+                                if dirty:  # Generates a cif file for each step in the building of the model
+                                    macrocomplex.save_to_mmCIF(output + str(i) + "_tmp_" + str(num_of_chains))
+                            elif verbose:  # If it has don't add the target chain
                                 print("Chain NOT added: interaction " + chain.id + ": " +
                                       str(inter_tple[:1]) + " ... " + str(inter_tple[-1]) + " to " + move.id)
-                        chain.interactions = False
+                        chain.interactions = False  # Set the interaction attribute to 0, this chain now will be ignored
                     else:
                         if verbose:
-                            print("Chain "+ chain.id + " empty")
+                            print("Chain " + chain.id + " empty")
                         num_empty_chains += 1
                 else:
-                    run = False
+                    run = False  # When the maximum chain treshold is reached stop running
                     break
-            if num_empty_chains >= len(macrocomplex):
+            if num_empty_chains >= len(macrocomplex):  # If all chains are empty of interactions stop running
                 run = False
-        print("Macrocomplex "+str(i)+" finished")
-        out_models.append(macrocomplex)
+        if verbose:
+            stoichometry_string = ""  # Print the model's stoichometry
+            for key in sorted(model_stoich.keys()):
+                stoichometry_string += key + ":" + str(model_stoich[key]) + ","
+            stoichometry_string = stoichometry_string[:-1]
+            print("Macrocomplex's"+str(i)+" Stoichiometry is: "+stoichometry_string)
+        print("Macrocomplex " + str(i) + " finished")
+        out_models.append(macrocomplex)  # Add model to the models list
+    return out_models
+
+def get_template_stoich_dict(template, seq_dict, verbose=False):
+    """Generates a stoichometry dictionary for a given pdb template"""
+    template_stoich_dict = {}  # Format: { "A": 2, "B": 3, ...}, where key is chain id and value
+    # is the number of repetitions
+    parser = PDBParser(PERMISSIVE=1, QUIET=True)
+    template_object = parser.get_structure("template", template)[0]  # Generates pdb template object
+    for chain in template_object:
+        chain = CustomChain(chain)  # Transforms pdb chain object to CustomChain instance
+        chain.parent = None  # Removes previous parent to evade biopython errors of id repetitions
+        chain_seq = chain.get_sequence()
+        if chain_seq in seq_dict:
+            chain.id = seq_dict[chain_seq]  # Updates the template chain id to the corresponding by its sequence
+            template_stoich_dict.setdefault(chain.id, 0)
+            template_stoich_dict[chain.id] += 1  # Adds to chain id counter
+    if verbose:  # Transforms the stoich_dict to a string to be printed
+        stoichometry_string = ""
+        for key in sorted(template_stoich_dict.keys()):
+            stoichometry_string += key+":"+str(template_stoich_dict[key])+","
+        stoichometry_string = stoichometry_string[:-1]
+        print("Template's Stoichiometry is: "+stoichometry_string)
+    return template_stoich_dict
+
+def get_string_stoich_dict(stoich_string):
+    """Given a stoichometry string it transsforms it to a dictionary"""
+    stoich_dict = {}
+    stoich_lst = stoich_string.split(",")  # Generates a stoich list: ["A:3", "B:2", ...]
+    for stoich in stoich_lst:
+        chain, number = stoich.split(":")
+        stoich_dict[chain] = int(number)  # Chain id as key and number as value: { "A": 3, "B": 2, ...}
+    return stoich_dict
+
+
+def build_macrocomplex(directory, output, max_chains=300, num_models=1, template=False, dirty=False, verbose=False, stoich_string=False):
+    """Main function that integrates all the important steps. First it reads the pdb models ans stores them in a list.
+    Then it compares all the chains and unifies the chain ids of the pdb list updating them, it also generates a sequence
+    key dictionary. Then it checks at each pdb model for chain interactions and stores them in a dictionary. After it
+    updates the dictionary with information of itself. Next it generates the model/s using this interactions. Finally it
+    saves the model/s in cif format."""
+    print("Program is running, please wait...")
+    # Reads and stores pdb objects in a list
+    in_pdbmodels = read_pdbs(directory, verbose)
+    # Unifies all ids by sequence, updates the pdb list with new chain ids and returns a sequence dictionary: {seq: id,}
+    seq_dict = unify_ids(in_pdbmodels, verbose)
+    # Checks each pdb object for chain interactions and stores it in a dictionary of dictionaries:
+    # {
+    #   Chain1_id : { residues_tuple_1_to_2 : chain1_object, chain2_object, residues_tuple_2_to_1}
+    #   Chain2_id : {residues_tuple_2_to_1 : chain2_object, chain1_object, residues_tuple_1_to_2}
+    #   ...
+    # }
+    interaction_dict = get_interaction_dict(in_pdbmodels, verbose=verbose)
+    # Changes interaction_dict chain objects to CustomChain instances and adds the interactions to each instance
+    update_interactions_dict(interaction_dict, verbose)
+    stoich_dict = {}
+    # If a template or a string has been given to set Stoichometry, it generates a dictionary of it
+    # { "A":5, "B":2, "C":6, .. }
     if template:
-        ordered_models = revaluate_models(out_models, template, seq_dict, verbose)
-        i = 1
-        print("Saving models and generating report.log ...")
-        with open("report.log", "w") as f:
-            f.write("Model\tNum_diff\n")
-            for diff, model in ordered_models:
-                model.id = "Model_"+str(i)
-                model.save_to_mmCIF(output + "_" + str(i), verbose)
-                f.write(output + "_" + str(i)+"\t"+str(diff)+"\n")
-                i += 1
-    else:
-        i = 1
-        print("Saving models...")
-        for model in out_models:
-            model.save_to_mmCIF(output + "_" + str(i), verbose)
-            i += 1
-    print("Done")
+        stoich_dict = get_template_stoich_dict(template, seq_dict, verbose=verbose)
+    elif stoich_string:
+        stoich_dict = get_string_stoich_dict(stoich_string)
+    # Starts iterating the interaction pair with more known interactions and generates the model/s
+    out_pdbmodels = main_loop(num_models, output, seq_dict, interaction_dict, verbose, max_chains, dirty, stoich_dict=stoich_dict)
+    # Saves the model/s to ciff format
+    save_results(out_pdbmodels, output)
