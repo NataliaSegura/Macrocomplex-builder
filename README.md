@@ -8,19 +8,20 @@
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 - [4SMacroBuilder](#4smacrobuilder)
 - [Software Requirements](#software-requirements)
+- [Package tree](#Package-tree)
 - [Download and Installation](#download-and-installation)
-  - [Installation via PIP](#installation-via-pip)
+  - [Package tree](#package-tree)
 - [Input Files](#input-files)
 - [Tutorial](#tutorial)
-  - [Command line arguments](#Command-line-arguments) 
+  - [Command line arguments](#command-line-arguments) 
   - [GUI](#gui)
-- [Analysis of examples](#Analysis-of-examples)
-  - [Proteosome](#Proteosome)
-  - [Enterovirus](#Enterovirus)
-  - [Nucleosome](#Nucleosome) 
+- [Analysis of examples](#analysis-of-examples)
+  - [Proteosome](#proteosome)
+  - [Enterovirus](#enterovirus)
+  - [Nucleosome](#nucleosome) 
 - [Strong Points](#strong-points)
-- [Limitations](#Limitations) 
-- [Next steps](#Next-steps)
+- [Limitations](#limitations) 
+- [Next steps](#next-steps)
 - [FAQS](#FAQS)
   
 <!-- /TOC -->
@@ -47,8 +48,18 @@ For the GUI the following ones are also necessary:
   * [Tkinter (for the GUI interface)](https://wiki.python.org/moin/TkInter)
 
 
+### Download and Installation
 
-### Package tree
+In order to be able to use all the scprits provided in 4SMacroBuilder the user has to install the package in the python site-packages.
+
+```bash
+   $ sudo python3 setup.py install
+```
+Be sure to have the dependencies previously stated.
+
+#### Package tree
+
+The package has the following structure:
 
     Macrocomplex-Builder/
       README.md
@@ -71,28 +82,18 @@ For the GUI the following ones are also necessary:
           **all templates**
       doc/
           report.md
-In order to be able to use all the scprits provided in 4SMacroBuilder the user has to install the package in the python site-packages.
 
-```bash
-   $ sudo python3 setup.py install
-```
-Be sure to have the dependencies previously stated.
-
-
-### Installation via PIP
-
-** To be discused **
 
 ### Input Files
 
 This program needs an input of PDB files holding the protein pairwise interactions needed to reconstruct the desired macrocomplex. The program can handle those scenarios: 
 
-* The same sequence appearing in different PDB files has not to be identical, it can handle up to 95% of identity. 
+* The same sequence appearing in different PDB files has not to be identical, it can handle 95% of identity. 
 * The same sequence appearing in different files with the same and/or different names. 
 * Repeated chain interactions are not requiered as inputs (i.e. interaction A-A 10 times is treated as a single PDB). It solves infinite structures (i.e. Microtubul).
+* Pairwise interactions wrongly given to the program. The program threshold for considering two chains as interacting together is 3.5 Amstrongs. If the user gives interactions with bigger distance, they are not considered as such.
 
-
-## Tutorial
+### Tutorial
 
 In this section we make a brief explanation of how to use 4SMacroBuilder.
 
@@ -123,10 +124,9 @@ In this section we make a brief explanation of how to use 4SMacroBuilder.
                             given to calculate the RMSD
 ```
 
-### GUI
+#### GUI
 
 Another way to use the program is using the the GUI. To do so run the following command:
-
 
 ```bash
 $ MB_GUI.py
@@ -136,11 +136,11 @@ For a detailed explanation of how to use the GUI check the *report.pdf*
 To get a better understanding of how to run the programme properly, we show different examples that represent different inputs that may be provided. The main aspects that may differ the inputs are: number of different chain interactions and number of atoms of the whole macrocomplex.
 
 
-## Analysis of examples
+### Analysis of examples
 
 Using the template (-t) optional argument. The program can compare between the model it's created and a given template. Using this we can analyse the quality of some reconstructed macrocomplexes.
 
-### Proteosome
+#### Proteosome
 
 1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the protein peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
 Throught our template analysis we do not see any differences with respect the number of chains between the one created and the template. Further analysis is done by structural visual comparison using an interactive visualization and molecular structural analysis programm such as UCSF CHIMERA. We can't oberve any differences in their structure, the superposition done is totally perfect. 
@@ -158,7 +158,7 @@ Throught our template analysis we do not see any differences with respect the nu
   </div>
 
 
-### Enterovirus
+#### Enterovirus
 
 3j23 PDB entry is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). EV71 os a single-stranded positive-sense RNA virus and a causative agent of hand, food, and mouth disease. 3j23 is a macrocomplex with three unique protein chains and a stoichiometry of hetero 180-mer-A60B60C60 with 4, 5 and 7 in each chain respectively.
 Giving a set of protein-protein interactions, 4SMacroBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both(image ***XX AND YY***).   
@@ -184,7 +184,8 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
     </div>
 </div>
 
-### Nucleosome
+#### Nucleosome
+
 3kuy PDB entry is the DNA stretching in the nucleosome core of *Escherichia coli* (https://www.rcsb.org/structure/3kuy).The DNA stretching in the nucleosome core can cause dramatic structural distortions, which may influence compaction and factor recognition in chromatin. It has a Stoichiometry of hetero 8-mer-A6B2.
 4SMacroBuilder is able to create this protein - nucleic acid macrocomplex with 4 protein chains and 2 nucleotic acid chains with a total of 28 different pairwise interactions.
 
@@ -200,7 +201,7 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
     </div>
   </div>
 
-## Strong Points
+### Strong Points
 
 *1*. **Dynamic programming implementation**
 
@@ -228,16 +229,21 @@ Possibility to model DNA/DNA, RNA/RNA, DNA/RNA, DNA/protein and RNA/protein inte
 
 Possibility to limit the number of chains when executing the program. Besides, if the user specifies that wants the macrocomplex with 7 chains but in fact the model has only 4 chains (i.e. Hemoglobin), it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
 
+*7*. **Heteroatoms and water matter**
+
+The active site of a protein often is composed by anions and cations. This information is described in the heteroatoms. 4SMAcroBuilder can use the heteroatom and water coordinates and information to construct the macrocomplex so we are not losing biological information. 
+
+
 
 ## Limitations
 
 *1*. **Increase of the computational cost with number of atoms in macrocomplex**
 
-One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtubul folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
+One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtuble folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
 
-We did a series of test normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 4 interactions by chain. 
+We did a series of test normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 2 interactions by chain. 
 
-As it can be seen in the following graph, the program follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run.
+Thanks to the illimited number of chains input that we can test when creating the microtubul we can asses its growing time curve. As it can be seen in the following graph, it might seem that until 200 chains the program followed a linear tendency but when a bigger number of calculations and steps was needed to create the microtuble, i.e. more chains, this behaviour is proven wrong. In fact, the program really follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run in an exopenential way.
 
 <div class="row">
     <div class="col-md-12">
@@ -245,15 +251,15 @@ As it can be seen in the following graph, the program follows an exponential cur
         <img src="/images/analysis.png" alt="time_analysis_image" style="width:600px;height:500px">
         <div class="caption">
           <h4><b>Figure 5</b></h4>
-          <p><i>As we can see, the residues indicated by the arrow are *hydrophobic*, while the rest are hydrophilic.</i></p>
+          <p><i>Time performing program analysis. In the X-axis there is the number of chains the user can provide with the -t optional argument and in the Y-axis there is the time in seconds 4SMacroBuilder needs.</i></p>
         </div>
       </div>
     </div>
   </div>
 
-*2*. **Microtubul modeling**
+*2*. **Microtuble modeling**
 
-Another factor that limit our program is that, due to some aspects of our approach, some "infinite" structures as the microtubule is not modeled as expected. This is possibly due to a random behavior implemented in the algorithm when adding subunits to the macrocomplex. 
+Another factor that limit our program is that, due to some aspects of our approach, some "infinite" structures are not modeled as expected, like the microtuble. This is possibly due to a random behavior implemented in the algorithm when adding subunits to the macrocomplex. 
 
 *3*. **Different solutions**
 
@@ -267,9 +273,13 @@ Although the program can be asked to build more than one model from the same inp
 
 It could be implemented an option of energy optimization to a local energy minimum by molecular dynamics once the model/s has been finished. Protein structures often have errors of various magnitude: atoms overlapping, wrong side chain orientation (lack of water molecules when modeling). An energy minimization would look for the pathway that reduces the most in the overall energy of the system, obtaining a best approach of the final structure if possible. It could be reached with programs as **Amber**, that combines molecular mechanical force fields with biomolecular simularions. 
  
-*2*. **Microtubul modeling**
+*2*. **Microtuble modeling**
 
-It would be a good point to modify the algorithm approach which could improve the correct shape of the microtubul, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
+It would be a good point to modify the algorithm approach which could improve the correct shape of the microtubule, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
+
+*3*. **ATP Synthase modeling**
+
+The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. THat way, we limit the interactions and we force the macrocomplex into a specific shape. One way to do it could be that given a template, the program calculates the stechiometry and use it to create the model.
 
 ## FAQS
 
