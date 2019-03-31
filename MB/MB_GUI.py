@@ -165,13 +165,16 @@ class MB(Frame):
 
     def update_image(self):
         """Updates the image widget with the first macrocomplex model"""
-        cwd = os.getcwd()
-        best_model_name = cwd +"/"+ output_name.get()+"_1.cif"
-        image_name = "%s/%s.png" % (cwd,output_name.get()+"_1")
-        os.system("pymol %s -c -d 'hide all;show ribbon;util.cbc;png %s, width=300, height=300'" % (best_model_name, image_name))
-        image = PhotoImage(file=image_name)
-        self.model_image.create_image(150, 150, anchor=CENTER, image=image)
-        self.model_image.image = image
+        try:
+            cwd = os.getcwd()
+            best_model_name = cwd +"/"+ output_name.get()+"_1.cif"
+            image_name = "%s/%s.png" % (cwd,output_name.get()+"_1")
+            os.system("pymol %s -c -d 'hide all;show ribbon;util.cbc;png %s, width=300, height=300'" % (best_model_name, image_name))
+            image = PhotoImage(file=image_name)
+            self.model_image.create_image(150, 150, anchor=CENTER, image=image)
+            self.model_image.image = image
+        except:
+            sys.stderr.write("Pymol couldn't create the image. Please, check if pymol is installed")
 
     def create_image(self):
         """Generates the image label"""
