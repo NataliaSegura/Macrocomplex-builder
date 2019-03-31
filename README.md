@@ -55,9 +55,9 @@ You can download our package using Git with the next command:
  
 ```bash
   $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
-  $ cd MacroBuilder
+  $ cd Macrocomplex-Builder
  ```
-At this pont, the directory 4SMacroBuilder should contain the files and directories described bellow:
+At this pont, the directory Macrocomplex-Builder should contain the files and directories described bellow:
 
 #### Package tree
 
