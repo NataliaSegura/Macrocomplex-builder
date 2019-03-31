@@ -123,7 +123,6 @@ Although the program can be asked to build more than one model from the same inp
 
 The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way. 
 
-The aim of the optional argument stechiometry is to solve the ATP problem. In that way, the problem ....
 >![**ATP Synthase template (rigth) and the one created by the program with an stechiometry of A:1,B:1,C:1,D:1,E:2,F:1,G:3,H:1,I:8,J:1,K:1,L:1**](../images/atp.png "atp_image") 
 
 
