@@ -401,20 +401,19 @@ The problem with these macrocomplex is the number of interactions it has and the
 ## FAQS
 
 **Do I need PyMOL to launch and use the GUI?**
-
-*Answer*:No, it is not necessary, but it is advisable to install [Pymol](https://pymol.org/2/) in order to see the whole macrocomplex/es once they have been done.
+No, it is not necessary, but it is advisable to install [Pymol](https://pymol.org/2/) in order to see the whole macrocomplex/es once they have been done.
 
 **What is the limit of chains that I can model for infinite macrocomplexes?**
-*Answer*In the GUI it's 1000, on the command line program there is no limit but more than 1000 chains could take a lot of time. By default is 100 in the GUI and 300 in the command line but in both programs it chan be changed. 
+In the GUI it's 1000, on the command line program there is no limit but more than 1000 chains could take a lot of time. By default is 100 in the GUI and 300 in the command line but in both programs it chan be changed. 
 
 **Will heteroatoms also be included in the final macrocomplex?**
-*Answer*Yes indeed, if the inputs pdbs had heteroatoms in them they will be present in the final structure. 
+Yes indeed, if the inputs pdbs had heteroatoms in them they will be present in the final structure. 
 
 **Can I open the resulting macrocomplex in chimera insted of pymol?**
-*Answer*Yes, but because the macrocomplex files are saved in mmCIF format they take 50 times more to open in chimera than normal pdb files so it's not recommended (at least for big structures like capsid). Also, macrocomplexes with DNA and RNA chains cannot be opened with chimera if the mmCIF format is used, so these structures will have to be opened with pymol. 
+Yes, but because the macrocomplex files are saved in mmCIF format they take 50 times more to open in chimera than normal pdb files so it's not recommended (at least for big structures like capsid). Also, macrocomplexes with DNA and RNA chains cannot be opened with chimera if the mmCIF format is used, so these structures will have to be opened with pymol. 
 
 **How fast is the program?**
-*Answer* It's quite fast. It shows linear growth during the first 300 added chains and then it's exponential. For modeling the enterovirus capsid it takes around 2 - 3 minutes to compute. 
+It's quite fast. It shows linear growth during the first 300 added chains and then it's exponential. For modeling the enterovirus capsid it takes around 2 - 3 minutes to compute. 
 
 **In the GUI, why do I get only one image if I selected to create more than one model?**
-*Answer* Because the GUI will only use the information of the first model (ended with _1) to fill the GUI widgets.
+Because the GUI will only use the information of the first model (ended with _1) to fill the GUI widgets.
