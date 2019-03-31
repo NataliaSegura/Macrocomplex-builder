@@ -31,7 +31,7 @@
 
 4SMacroBuilder is a stand-alone python3 program developed by Pau Badia i Monpel, Altaïr C. Hernández and Natàlia Segura Alabart. It builds protein macrocomplexes taking a set of protein-protein, protein-RNA, protein-DNA, RNA - DNA, RNA - RNA, and/or DNA - DNA interactions. This software could serve to study quaternary structures that are difficult to study *in vivo*.
 
-Below is shown how to install and use this program as a standalone command line script (executing the script *MacroB.py*) or with the Graphical User Interface (*MB_GUI.py*).
+Below is shown how to install and use this program as a stand-alone command line script (executing the script *MacroB.py*) or with the Graphical User Interface (*MB_GUI.py*).
 
 
 ### Software Requirements
@@ -41,21 +41,12 @@ These are the software and its versions required for the 4SMacroBuilder function
   * [Python 3.6](https://www.python.org/downloads/)
   * [Pymol](https://pymol.org/2/)
 
+
 For the GUI the following ones are also necessary:
 
   * [Tkinter (for the GUI interface)](https://wiki.python.org/moin/TkInter)
 
 
-## Download and Installation
-
-You can download our package using Git with the next command. We also recommend creating a directory named "Models":
- 
-```bash
-  $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
-  $ cd MacroBuilder
-  $ mkdir Models
- ```
-At this pont, the directory 4SMacroBuilder should contain the files and directories described bellow:
 
 ### Package tree
 
@@ -80,22 +71,6 @@ At this pont, the directory 4SMacroBuilder should contain the files and director
           **all templates**
       doc/
           report.md
-
-* README.md, README.pdf: the files containing the tutorial and information about our application.
-* MacroBuilder: a fold with the following scripts:
-  - MBlauncher.py: the command-line script to launch the program.
-  - MacroB.py: a module requiered by MBlauncher.py where are defined the classes of the program.
-  - CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
-  - MB_GUI.py: a module to launch the Graphical User Interface.
-* Examples: a directory with several examples stored in sub-directories that serve as input to the program.
-* Models: an empty folder where the created complexes will be saved.
-* Templates: the raw PDB files from which we extracted the example pairwise interactions.
-* setup.py script: to install the program in the python side-packages.
-* doc: a folder with the report.
-
-
-Check that all this information has been correctly downloaded and that there is the script called *setup.py*.
-
 In order to be able to use all the scprits provided in 4SMacroBuilder the user has to install the package in the python site-packages.
 
 ```bash
@@ -113,7 +88,7 @@ Be sure to have the dependencies previously stated.
 This program needs an input of PDB files holding the protein pairwise interactions needed to reconstruct the desired macrocomplex. The program can handle those scenarios: 
 
 * The same sequence appearing in different PDB files has not to be identical, it can handle up to 95% of identity. 
-* The same sequence appearing in different files with the same or different names. 
+* The same sequence appearing in different files with the same and/or different names. 
 * Repeated chain interactions are not requiered as inputs (i.e. interaction A-A 10 times is treated as a single PDB). It solves infinite structures (i.e. Microtubul).
 
 
@@ -128,7 +103,7 @@ In this section we make a brief explanation of how to use 4SMacroBuilder.
     $ MBlauncher.py -h
 
     usage: MBlauncher.py [-h] -i, -input DIRECTORY [-o, -output OUTPUT]
-                     [-c MAX_CHAINS] [-n NUM_MODELS] [-d] [-v]
+                     [-c MAX_CHAINS] [-n NUM_MODELS] [-d] [-v] [-t TEMPLATE]
 
     MacrocomplexBuilder is a python program designed to generate macrocomplex
     structures from simple pair inetractions
@@ -144,6 +119,8 @@ In this section we make a brief explanation of how to use 4SMacroBuilder.
       -d, --dirty           Generates an output file for each added chain to track
                             how the program builds the complex
       -v, --verbose         Shows what the program is doing
+      -t TEMPLATE           To discriminate against different models, a template can be
+                            given to calculate the RMSD
 ```
 
 ### GUI
@@ -161,18 +138,24 @@ To get a better understanding of how to run the programme properly, we show diff
 
 ## Analysis of examples
 
-Using the template argument. The program can compare between the model it's created and a given template. Using this we can analyse the quality of some reconstructed macrocomplexes.
-
-number of template differences, conta el nombre de diferents cadenes. 
-parser.add_argument('-t', dest='template', action="store", type=str, default=None, help="To discriminate against different models, a template can be given to calculate the RMSD")
+Using the template (-t) optional argument. The program can compare between the model it's created and a given template. Using this we can analyse the quality of some reconstructed macrocomplexes.
 
 ### Proteosome
 
-1pma is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins.
-Throught our template analysis we do not see any differences with respect the number of chains between the one created and the template. Further analysis is done by structural visual comparison using an interactive visualization and molecular structural analysis programm such as UCSF CHIMERA ( image ***XX***). We can't oberve any differences in their structure, the superposition done is totally perfect. 
-<p align="center">
-  <img src="/proteosome.png" width="450"/>
-</p>
+1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by ptoteolysis of the protein peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer -A14B14.
+Throught our template analysis we do not see any differences with respect the number of chains between the one created and the template. Further analysis is done by structural visual comparison using an interactive visualization and molecular structural analysis programm such as UCSF CHIMERA. We can't oberve any differences in their structure, the superposition done is totally perfect. 
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/proteosome.png" alt="proteosome_superimposed_image" style="width:600px;height:500px">
+        <div class="caption">
+          <h4><b>Figure 1</b></h4>
+          <p><i>In blue we see the 1pma PDB protein and in brown the model created by 4SMacroBuilder</i></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 ### Enterovirus
@@ -227,7 +210,17 @@ We did a series of test normalizing by number of atoms and interactions. The mic
 
 As it can be seen in the following graph, the program follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run.
 
-**graph**
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/analysis.png" alt="time_analysis_image" style="width:600px;height:500px">
+        <div class="caption">
+          <h4><b>Figure 5</b></h4>
+          <p><i>As we can see, the residues indicated by the arrow are *hydrophobic*, while the rest are hydrophilic.</i></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 *2*. **Microtubul modeling**
 
