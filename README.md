@@ -148,7 +148,7 @@ Throught our template analysis we do not see any differences with respect the nu
 <div class="row">
     <div class="col-md-12">
       <div class="thumbnail">
-        <img src="/images/proteosome.png" alt="proteosome_superimposed_image" style="width:600px;height:500px">
+        <img src="/images/proteosome.png" alt="proteosome_superimposed_image" style="width:500px;height:400px">
         <div class="caption">
           <h4><b>Figure 1</b></h4>
           <p><i>In blue we see the 1pma PDB protein and in brown the model created by 4SMacroBuilder</i></p>
