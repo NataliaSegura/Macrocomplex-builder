@@ -312,7 +312,7 @@ The algorithm is based in a dynamic programming implementaton, in such a way tha
 
 *3*. **Obtain different models**
 
-Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models. Different models are scored in an output file.
+Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models.
 
 *4*. **Launching the program with GUI**
 
