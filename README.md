@@ -194,32 +194,32 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
 
 The algorithm is based in a dynamic programming implementaton, in such a way that the final output is retrived in a very short time. This is due to the fact tha we use the interactions between chains as a previous knowlege to solve the final problem (*see documentation*). 
 
-2. **Input managing**
+*2*. **Input managing**
 
   - The input names does not affect to the output (i.e. if all PDB files are named XY.pdb).
   - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtubul, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtubul).
   - If the user gives a non-existing or wrong interaction the program ignores it and keeps going.
 
-3. **Obtain different models**
+*3*. **Obtain different models**
 
 Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models. Different models are scored in an output file.
 
-4. **Launching the program with GUI**
+*4*. **Launching the program with GUI**
 
 4SMAcroBuilder can be launched from command line or with the **Graphical User Interface** (GUI). Besides, the GUI offer the advantatge to obtain a Pymol image of the final model, without the requirement of opening pymol.
 
-5. **DNA & RNA interactions**
+*5*. **DNA & RNA interactions**
  
 Possibility to model DNA/DNA, RNA/RNA, DNA/RNA, DNA/protein and RNA/protein interactions and retrieve a quick output (i.e. when modeing the ribosome).
 
-6. **Modifiable number of chains in the final model**
+*6*. **Modifiable number of chains in the final model**
 
 Possibility to limit the number of chains when executing the program. Besides, if the user specifies that wants the macrocomplex with 7 chains but in fact the model has only 4 chains (i.e. Hemoglobin), it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
 
 
 ## Limitations
 
-1. **Increase of the computational cost with number of atoms in macrocomplex**
+*1*. **Increase of the computational cost with number of atoms in macrocomplex**
 
 One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtubul folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
 
@@ -229,11 +229,11 @@ As it can be seen in the following graph, the program follows an exponential cur
 
 **graph**
 
-2. **Microtubul modeling**
+*2*. **Microtubul modeling**
 
 Another factor that limit our program is that, due to some aspects of our approach, some "infinite" structures as the microtubule is not modeled as expected. This is possibly due to a random behavior implemented in the algorithm when adding subunits to the macrocomplex. 
 
-3. **Different solutions**
+*3*. **Different solutions**
 
 Although the program can be asked to build more than one model from the same input, it is not able to deduce and build more than one output when there could be more than one possible solution. 
 
