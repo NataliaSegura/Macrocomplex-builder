@@ -18,9 +18,6 @@
   - [Enterovirus](#enterovirus)
   - [Proteosome](#proteosome)
   - [Nucleosome](#nucleosome) 
-- [Strong Points](#strong-points)
-- [Computational Cost](#computational-cost)
-- [Limitations](#limitations) 
 - [Next steps](#next-steps)
 - [FAQS](#FAQS)
   
@@ -30,7 +27,7 @@
 
 ### MacrocomplexBuilder
 
-MacrocomplexBuilder is a stand-alone python3 program developed by Pau Badia i Mompel, Altaïr C. Hernández and Natàlia Segura Alabart. It builds protein macrocomplexes taking a set of protein-protein, protein-RNA, protein-DNA, RNA - DNA, RNA - RNA, and/or DNA - DNA interactions. This software could serve to study quaternary structures that are difficult to study *in vivo*.
+MacrocomplexBuilder is a stand-alone python3 program developed by **Pau Badia i Mompel**, **Altaïr C. Hernández** and **Natàlia Segura Alabart**. It builds protein macrocomplexes taking a set of protein-protein, protein-RNA, protein-DNA, RNA - DNA, RNA - RNA, and/or DNA - DNA interactions. This software could serve to study quaternary structures that are difficult to study *in vivo*.
 
 Below is shown how to install and use this program as a stand-alone command line script (executing the script *MacroB.py*) or with the Graphical User Interface (*MB_GUI.py*).
 
@@ -88,6 +85,12 @@ The package has the following structure:
           **all templates**
       doc/
           report.md
+          CustomPDB.m.html
+          MB_GUI.m.html
+          MBlauncher.m.html
+          MacroB.m.html
+          index.html
+          
 
 * README.md, README.pdf: the files containing the tutorial and information about our application.
 * MB: a fold with the following scripts:
@@ -96,7 +99,7 @@ The package has the following structure:
   - CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
   - MB_GUI.py: a module to launch the Graphical User Interface.
 * Examples: a directory with several examples stored in sub-directories that serve as input to the program.
-* Models: an empty folder where the created complexes will be saved.
+* Images: all the images used to generate the README and the Report.
 * Templates: the raw PDB files from which we extracted the example pairwise interactions.
 * setup.py script: to install the program in the python side-packages.
 * doc: a folder with the report.md fie and report.pdf, as well as the documentation.
