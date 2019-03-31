@@ -71,6 +71,8 @@ Thanks to the illimited number of chains input that we can test when creating th
 
 >![**Time performing program analysis. In the X-axis there is the number of chains the user can provide with the -t optional argument and in the Y-axis there is the time in seconds MacrocomplexBuilder needs.**](../images/analysis.png "approach_explanation_image"){width=50.3%}   
 
+>![**Microtuble model created with MacrocomplexBuilder with 250 chains and 412.331 seconds.**](../images/atp.png "atp_250_chains_image"){width=50.3%}   
+
 ### Strong Points
 
 *1*. **Dynamic programming implementation**
