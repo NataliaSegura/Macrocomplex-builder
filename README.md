@@ -51,13 +51,12 @@ For the GUI the following ones are also necessary:
 
 ### Download and Installation
 
-You can download our package using Git with the next command:
- 
+In order to be able to use all the scprits provided in MacrocomplexBuilder the user has to install the package in the python site-packages.
++
 ```bash
-  $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
-  $ cd Macrocomplex-Builder
- ```
-At this pont, the directory Macrocomplex-Builder should contain the files and directories described bellow:
+   $ sudo python3 setup.py install
+```
+Be sure to have the dependencies previously stated.
 
 #### Package tree
 
@@ -67,7 +66,7 @@ The package has the following structure:
       README.md
       README.pdf
       setup.py
-      MB/
+      MacroBuilder/
           __init__.py
           MacroB.py
           CustomPDB.py
@@ -76,41 +75,14 @@ The package has the following structure:
       Examples/
           enterovirus/
           hemo/
-          microtuble/
+          microtubul/
           nucleosome/
           phosphate/
           proteasome/
-      Templates/
-          3j23_enterovirus/
-          1a3n_hemo/
-          5syg_microtuble/
-          3kuy_nucleosome/
-          2f1d_phosphate/
-          1pma_proteosome/
+      templates/
+          **all templates**
       doc/
           report.md
-
-* README.md, README.pdf: the files containing the tutorial and information about our application.
-* MB: a fold with the following scripts:
-  - MBlauncher.py: the command-line script to launch the program.
-  - MacroB.py: a module requiered by MBlauncher.py where are defined the classes of the program.
-  - CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
-  - MB_GUI.py: a module to launch the Graphical User Interface.
-* Examples: a directory with several examples stored in sub-directories that serve as input to the program.
-* Models: an empty folder where the created complexes will be saved.
-* Templates: the raw PDB files from which we extracted the example pairwise interactions.
-* setup.py script: to install the program in the python side-packages.
-* doc: a folder with the report.
-
-Check that all this information has been correctly downloaded and that there is the script called *setup.py*.
-
-In order to be able to use all the scprits provided in MacrocomplexBuilder the user has to install the package in the python site-packages.
-
-```bash
-   $ sudo python3 setup.py install
-```
-Be sure to have the dependencies previously stated.
-
 
 
 ### Input Files
@@ -122,6 +94,10 @@ This program needs an input of PDB files holding the protein pairwise interactio
 * Repeated chain interactions are not requiered as inputs (i.e. interaction A-A 10 times is treated as a single PDB). It solves infinite structures (i.e. *Microtuble*).
 * Pairwise interactions wrongly given to the program. The program threshold for considering two chains as interacting together is 3.5 Amstrongs. If the user gives interactions with bigger distance, they are not considered as such.
 * A template PDB file containing the structure of the model to use it as a guideline.
+
+
+All the models that only have protein - protein interactions can be dispalyed with both USCF CHIMERA and Pymol but when the model has nucleic acid interactions it must be opened with Pymol.
+
 
 ### Tutorial
 
@@ -191,7 +167,6 @@ This is a clear example of one of the strong points of our program: given 8 inte
       </div>
     </div>
   </div>
-
 #### Proteosome
 
 The 1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
@@ -242,7 +217,7 @@ MacrocomplexBuilder is able to create this protein - nucleic acid macrocomplex w
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 ### Strong Points
 
@@ -253,7 +228,7 @@ The algorithm is based in a dynamic programming implementaton, in such a way tha
 *2*. **Input managing**
 
   - The input names does not affect to the output (i.e. if all PDB files are named XY.pdb).
-  - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtuble, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtuble).
+  - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtubul, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtubul).
   - If the user gives a non-existing or wrong interaction the program ignores it and keeps going.
 
 *3*. **Obtain different models**
@@ -313,11 +288,23 @@ Although the program can be asked to build more than one model from the same inp
 
 *4*. **The ATP problem and global stechiometry**
 
-The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way. 
+The problem with the ATP synthase macrocomplex is the number of interactions it has. The program can't handle all of them to create it and the wrong model is built. A way to modify the algorithmic approach is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way because we are forcing the right number of chains but not whose interactions are in each one.
 
 
-
-The aim of the optional argument stechiometry is to solve the ATP problem. In that way, the problem 
+```bash
+python3 MBlauncher.py -i ATP/ -o ATP_ -s A:1,B:1,C:1,D:1,E:2,F:1,G:3,H:1,I:8,J:1,K:1,L:1
+```
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/atp.png" alt="atp_image" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>Figure 5</b></h4>
+          <p><i>Comparison of 5arg PDB ATP Synthase model (right) and the model created with stechiometry limitations (left)</i></p>
+        </div>
+      </div>
+    </div>
+</div>
 
 ## Next Steps
 
@@ -329,7 +316,7 @@ It could be implemented an option of energy optimization to a local energy minim
  
 *2*. **Microtuble modeling**
 
-It would be a good point to modify the algorithm approach which could improve the correct shape of the microtuble, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
+It would be a good point to modify the algorithm approach which could improve the correct shape of the microtubule, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
 
 *3*. **ATP Synthase modeling**
 
