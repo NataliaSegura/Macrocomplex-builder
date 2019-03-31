@@ -1,4 +1,4 @@
-# 4SMacro-Builder  
+# MacrocomplexBuilder
 ## Constructing macromolecular complexes. 
 
 *Pau Badia, Altaïr C.Hernández and Natàlia Segura*
@@ -6,7 +6,7 @@
 ## **Index**
 
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-- [4SMacroBuilder](#4smacrobuilder)
+- [MacrocomplexBuilder](#macrocomplexbuilder)
 - [Software Requirements](#software-requirements)
 - [Package tree](#Package-tree)
 - [Download and Installation](#download-and-installation)
@@ -20,6 +20,7 @@
   - [Proteosome](#proteosome)
   - [Nucleosome](#nucleosome) 
 - [Strong Points](#strong-points)
+- [Computational Cost](#computational-cost)
 - [Limitations](#limitations) 
 - [Next steps](#next-steps)
 - [FAQS](#FAQS)
@@ -28,16 +29,16 @@
 
 
 
-### 4SMacroBuilder
+### MacrocomplexBuilder
 
-4SMacroBuilder is a stand-alone python3 program developed by Pau Badia i Monpel, Altaïr C. Hernández and Natàlia Segura Alabart. It builds protein macrocomplexes taking a set of protein-protein, protein-RNA, protein-DNA, RNA - DNA, RNA - RNA, and/or DNA - DNA interactions. This software could serve to study quaternary structures that are difficult to study *in vivo*.
+MacrocomplexBuilder is a stand-alone python3 program developed by Pau Badia i Monpel, Altaïr C. Hernández and Natàlia Segura Alabart. It builds protein macrocomplexes taking a set of protein-protein, protein-RNA, protein-DNA, RNA - DNA, RNA - RNA, and/or DNA - DNA interactions. This software could serve to study quaternary structures that are difficult to study *in vivo*.
 
 Below is shown how to install and use this program as a stand-alone command line script (executing the script *MacroB.py*) or with the Graphical User Interface (*MB_GUI.py*).
 
 
 ### Software Requirements
 
-These are the software and its versions required for the 4SMacroBuilder functionality and execution:
+These are the software and its versions required for the MacrocomplexBuilder functionality and execution:
 
   * [Python 3.6](https://www.python.org/downloads/)
   * [Pymol](https://pymol.org/2/)
@@ -50,7 +51,7 @@ For the GUI the following ones are also necessary:
 
 ### Download and Installation
 
-In order to be able to use all the scprits provided in 4SMacroBuilder the user has to install the package in the python site-packages.
+In order to be able to use all the scprits provided in MacrocomplexBuilder the user has to install the package in the python site-packages.
 +
 ```bash
    $ sudo python3 setup.py install
@@ -96,7 +97,7 @@ This program needs an input of PDB files holding the protein pairwise interactio
 
 ### Tutorial
 
-In this section we make a brief explanation of how to use 4SMacroBuilder.
+In this section we make a brief explanation of how to use MacrocomplexBuilder.
 
 #### Command line arguments
 
@@ -139,7 +140,7 @@ To get a better understanding of how to run the programme properly, we show diff
 #### Enterovirus
 
 The 3j23 PDB entry is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). EV71 is a single-stranded positive-sense RNA virus and a causative agent of hand, food, and mouth disease. 3j23 is a macrocomplex with three unique protein chains and a stoichiometry of hetero 180-mer-A60B60C60 with 4, 5 and 7 interaction sites in each chain respectively.
-Giving a set of protein-protein interactions, 4SMacroBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both (*Figures 1*).   
+Giving a set of protein-protein interactions, MacrocomplexBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both (*Figures 1*).   
 
 To achieve this complex we can run:
 
@@ -156,8 +157,8 @@ This is a clear example of one of the strong points of our program: given 8 inte
       <div class="thumbnail">
         <img src="/images/ent.png" alt="enterovirus_image" style="width:500px;height:400px">
         <div class="caption">
-          <h4><b>Figure 3</b></h4>
-          <p><i>Comparison between the 3j23 PDB entry (left) and the model created by 4SMacroBuilder(right)</i></p>
+          <h4><b>Figure 1</b></h4>
+          <p><i>Comparison between the 3j23 PDB entry (left) and the model created by MacrocomplexBuilder(right)</i></p>
         </div>
       </div>
     </div>
@@ -181,8 +182,8 @@ Even if in these case it is not necessary to limit the number of chains, we limi
       <div class="thumbnail">
         <img src="/images/proteosome.png" alt="proteosome_superimposed_image" style="width:500px;height:400px">
         <div class="caption">
-          <h4><b>Figure 3</b></h4>
-          <p><i>In blue we see the 1pma PDB protein and in brown the model created by 4SMacroBuilder</i></p>
+          <h4><b>Figure 2</b></h4>
+          <p><i>In blue we see the 1pma PDB protein and in brown the model created by MacrocomplexBuilder</i></p>
         </div>
       </div>
     </div>
@@ -191,7 +192,7 @@ Even if in these case it is not necessary to limit the number of chains, we limi
 
 #### Nucleosome
 
-As an optional argument, 4SMacroBuilder can accept global stechiometry. If the user desires, it can be given and the program will create the model according to the given stechiometry.To achieve this complex we can run:
+As an optional argument, MacrocomplexBuilder can accept global stechiometry. If the user desires, it can be given and the program will create the model according to the given stechiometry.To achieve this complex we can run:
 
 ```python
 python3 MBlauncher.py -i nucl/ -o nucl -v -s A6:B2
@@ -199,7 +200,7 @@ python3 MBlauncher.py -i nucl/ -o nucl -v -s A6:B2
 Where nucl/ is the Directory containing all input files, nucl is the file where the output will be saved in the current directory, -v means that the standard error will be printed, and A6:B2 means that the global stechiometry will be this one.
 
 The 3kuy PDB entry is the DNA stretching in the nucleosome core of *Escherichia coli* (https://www.rcsb.org/structure/3kuy).The DNA stretching in the nucleosome core can cause dramatic structural distortions, which may influence compaction and factor recognition in chromatin. It has a Stoichiometry of hetero 8-mer-A6B2.
-4SMacroBuilder is able to create this protein - nucleic acid macrocomplex with 4 protein chains and 2 nucleotic acid chains with a total of 28 different pairwise interactions.
+MacrocomplexBuilder is able to create this protein - nucleic acid macrocomplex with 4 protein chains and 2 nucleotic acid chains with a total of 28 different pairwise interactions.
 
 
 <div class="row">
@@ -207,7 +208,7 @@ The 3kuy PDB entry is the DNA stretching in the nucleosome core of *Escherichia 
       <div class="thumbnail">
         <img src="/images/nucl.png" alt="model_nucleosome_image" style="width:500px;height:400px">
         <div class="caption">
-          <h4><b>Figure 4</b></h4>
+          <h4><b>Figure 3</b></h4>
           <p><i>Comparison between the nucleosome created limiting it stechiometry to A:6,B:2 (right) and the one created without stechiometry limitations (left)</i></p>
         </div>
       </div>
@@ -232,7 +233,7 @@ Possibility to generate different models in a very short time. This allow the us
 
 *4*. **Launching the program with GUI**
 
-4SMAcroBuilder can be launched from command line or with the **Graphical User Interface** (GUI). Besides, the GUI offer the advantatge to obtain a Pymol image of the final model, without the requirement of opening pymol.
+MacrocomplexBuilder can be launched from command line or with the **Graphical User Interface** (GUI). Besides, the GUI offer the advantatge to obtain a Pymol image of the final model, without the requirement of opening pymol.
 
 *5*. **DNA & RNA interactions**
  
@@ -244,31 +245,34 @@ Possibility to limit the number of chains when executing the program. Besides, i
 
 *7*. **Heteroatoms and water matter**
 
-The active site of a protein often is composed by anions and cations. This information is described in the heteroatoms. 4SMAcroBuilder can use the heteroatom and water coordinates and information to construct the macrocomplex so we are not losing biological information. 
+The active site of a protein often is composed by anions and cations. This information is described in the heteroatoms. MacrocomplexBuilder can use the heteroatom and water coordinates and information to construct the macrocomplex so we are not losing biological information. 
 
-
-
-## Limitations
-
-*1*. **Increase of the computational cost with number of atoms in macrocomplex**
+## Computational cost
 
 One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtuble folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
 
-We did a series of test normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 2 interactions by chain. 
+We did a series of tests normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 4 interactions by chain. 
 
-Thanks to the illimited number of chains input that we can test when creating the microtubul we can asses its growing time curve. As it can be seen in the following graph, it might seem that until 200 chains the program followed a linear tendency but when a bigger number of calculations and steps was needed to create the microtuble, i.e. more chains, this behaviour is proven wrong. In fact, the program really follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run in an exopenential way.
+Thanks to the illimited number of chains input that we can test when creating the microtuble we can asses its growing time curve. As it can be seen in the following graph, it might seem that until 200 chains the program followed a linear tendency but when a bigger number of calculations and steps was needed to create the microtuble, i.e. more chains, this behaviour is proven wrong. In fact, the program really follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run in an exopenential way.
 
 <div class="row">
     <div class="col-md-12">
       <div class="thumbnail">
         <img src="/images/analysis.png" alt="time_analysis_image" style="width:600px;height:500px">
         <div class="caption">
-          <h4><b>Figure 5</b></h4>
-          <p><i>Time performing program analysis. In the X-axis there is the number of chains the user can provide with the -t optional argument and in the Y-axis there is the time in seconds 4SMacroBuilder needs.</i></p>
+          <h4><b>Figure 4</b></h4>
+          <p><i>Time performing program analysis. In the X-axis there is the number of chains the user can provide with the -t optional argument and in the Y-axis there is the time in seconds MacrocomplexBuilder needs.</i></p>
         </div>
       </div>
     </div>
   </div>
+
+
+## Limitations
+
+*1*. **Increase of the computational cost with number of atoms in macrocomplex**
+
+As it can be seen in the *Figure 4*, the programs follows an exponential curve. The more atoms and interactions it has to check, the longer it takes to process.
 
 *2*. **Microtuble modeling**
 
@@ -278,9 +282,14 @@ Another factor that limit our program is that, due to some aspects of our approa
 
 Although the program can be asked to build more than one model from the same input, it is not able to deduce and build more than one output when there could be more than one possible solution. 
 
-*4*. **Global stechiometry**
+*4*. **The ATP problem and global stechiometry**
+
+The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way. 
+
+
 
 The aim of the optional argument stechiometry is to solve the ATP problem. In that way, the problem 
+
 ## Next Steps
 
 *What could be the next future improvements?*
