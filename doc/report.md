@@ -9,6 +9,9 @@
 - [Introduction](#Introduction)
 - [Background and Scientific explanation](#Background-and-Scientific-explanation)
 - [Algorithm implementation](#Algorithm-implementation)
+- [Strong Points](#strong-points)
+- [Computational Cost](#computational-cost)
+- [Limitations](#limitations) 
 - [References](#References)
 <!-- /TOC -->
 
@@ -48,7 +51,7 @@ Below is explained how did we deal with this problem, as well as the approach we
 
 We approached the exhaustive search algorithm by focusing on the interacting residues of each subunit. If we imagine the whole macrocomplex structure as a lego puzzle, then we would realize that each chain has some residues that are interacting with at least another chain (*hydrophobic residues*) and the rest of the residues that are exposed to the solvent environment (*hydrophilic residues*). 
 
-Basing on that premise, we store the interacting residues for each chain, as well as the corresponding chain those residues are interacting with. We did this by looking for those residues that are in no larger that 5 Amstrongs distance(*reference*). In that way force the program to check in each iteration/superimposition whether those residues are interacting or not. At the same time, we consider as feasible complexes those that have no clashes when superimposed, which means that the backbone of the model that is been superimopsed is not interacting with the rest of the complex already joined, with a threshold distance of 2 Amstrongs(*reference*).   
+Basing on that premise, we store the interacting residues for each chain, as well as the corresponding chain those residues are interacting with. We did this by looking for those residues that are in no larger that 3,5 Amstrongs distance. In that way force the program to check in each iteration/superimposition whether those residues are interacting or not. At the same time, we consider as feasible complexes those that have no clashes when superimposed, which means that the backbone of the model that is been superimopsed is not interacting with the rest of the complex already joined, with a threshold distance of 2 Amstrongs.   
 
 Then, our program would start to structurally superimpose structures with at least two identical subunits (those that share a pairwise sequence identity bigger or equal to 95%). For each model the program knows how many interacting sites are in each protein, and even with which specific chain has to interact on those sites. 
 
@@ -56,7 +59,7 @@ And know, when we read the PDB files, for each chain we load into memory the int
 
 The superimposition starts with the chain with more interactions, to avoid starting for a wrongly given interaction that just interact with itself. Once the initial model is chosen, we implemented a random behavior to allow the rest of models to be randomly added. One of the main aspects of our approach that makes it as fast is the use of an internal check list when the superposing occurs. This allow the program to know, for each chain, which interactions are done and which ones are still remain to be checked and superimposed. However, if a chain appears more than once in the complex, each of them will have its checklist to complete. That way we ensure that all interactions are correctly done.
 
-This approach works also with DNA and RNA interactions, as we just checked the atomic position of each structure 
+This approach works also with DNA and RNA interactions, as we just checked the atomic position of each structure. The only thing we did is a function to store the DNA or RNA sequence and, from that, the main loop manage to build the whole structure.
 
 ### Strong Points
 
@@ -90,6 +93,17 @@ Possibility to limit the number of chains when executing the program. Besides, i
 
 The active site of a protein often is composed by anions and cations. This information is described in the heteroatoms. MacrocomplexBuilder can use the heteroatom and water coordinates and information to construct the macrocomplex so we are not losing biological information. 
 
+## Computational cost
+
+One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtuble folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
+
+We did a series of tests normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 4 interactions by chain. 
+
+Thanks to the illimited number of chains input that we can test when creating the microtuble we can asses its growing time curve. As it can be seen in the following graph, it might seem that until 200 chains the program followed a linear tendency but when a bigger number of calculations and steps was needed to create the microtuble, i.e. more chains, this behaviour is proven wrong. In fact, the program really follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run in an exopenential way.
+
+>![**Time performing program analysis. In the X-axis there is the number of chains the user can provide with the -t optional argument and in the Y-axis there is the time in seconds MacrocomplexBuilder needs.**](../images/analysis.png "approach_explanation_image"){width=50.3%}   
+
+
 ## Limitations
 
 *1*. **Increase of the computational cost with number of atoms in macrocomplex**
@@ -109,30 +123,6 @@ Although the program can be asked to build more than one model from the same inp
 The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way. 
 
 The aim of the optional argument stechiometry is to solve the ATP problem. In that way, the problem ....
-
-#### GUI
-
-Another way to use the program is using the the GUI. To do so run the following command:
-
-```bash
-$ MB_GUI.py
-```
->![**GUI structure:**Here is the main structure of the GUI. First there is the Options widged where the user can select what parammeters to use for the modeling. Then there is the console panel where both the stderr and stdout will be shown, if the user wants more information there is the option verbose which will print each action that the program does. Next there is the Sequence widget, where the model sequences and their id's will be shown. At its bottom, there's the Structure composition panel where the model's chain composition is shown. Finally, a n image of the resulting model is shown at the bottom. (For Sequence, Structure and Image, all of the information shown is from the first model).](../images/whole_GUI.png "approach_explanation_image"){width=50.3%}   
-
-
-To use the program, first a directory must be selected. One can do this by going to File>Select Directory:
-
->![**Selecting a directory:** To correctly select an input directory, the user must enter INSIDE the directory in the navigation window and press OK.](../images/selecting_directory.png "approach_explanation_image"){width=50.3%}
-
-
-Then, the user can change any of the options in the option panel, let's make just one model of a Proteosome to show it really works and select the option verbose to see what the program is doing. We press RUN to tun the program:
-
->![**Modify options before run:** Here the model will make just one model, with the name proteasoma_1.cif and without checking structure composition.](../images/options_before_run.png "approach_explanation_image"){width=50.3%}
-
-
-Finally we can see how the program has build this proteasoma really fast. 
-
->![**Final result:** The sequence, structure composition, structure and console have been updated.](../images/final_result.png "approach_explanation_image"){width=50.3%}
 
 
 ## Next Steps
@@ -162,4 +152,5 @@ Jeffrey, George A.; An introduction to hydrogen bonding, Oxford University Press
 * Before two chains are superimposed, in order to determinate if they will be or not, we will check if they have clashes. The threshold that we use is by measuring the atomic distance. If the distance is 2 Amstrongs or less and there is more than a 3% of the alpha carbons atoms in proteins and the carbon one in nucleic acid atoms has clashes we will not superpose them.  
 Values of Vanderwalls radius taken from: http://ww2.chemistry.gatech.edu/~lw26/structure/molecular_interactions/mol_int.html
 Batsanov S.S.; Van der Waals Raddi of Elements, Inorganic Materials, 2001.
+
 
