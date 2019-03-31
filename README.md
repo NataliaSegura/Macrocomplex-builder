@@ -39,11 +39,6 @@ Below is shown how to install and use this program as a standalone command line 
 These are the software and its versions required for the 4SMacroBuilder functionality and execution:
 
   * [Python 3.6](https://www.python.org/downloads/)
-  * [Biopython](http://biopython.org/wiki/Download)
-  * argparse
-  * os
-  * sys 
-  * numpy 
   * [Pymol](https://pymol.org/2/)
 
 For the GUI the following ones are also necessary:
@@ -57,27 +52,54 @@ You can download our package using Git with the next command. We also recommend 
  
 ```bash
   $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
-  $ cd 4SMacroBuilder
+  $ cd MacroBuilder
   $ mkdir Models
  ```
-At this pont, the directory 4SMacroBuilder should contain the following files and directories:
+At this pont, the directory 4SMacroBuilder should contain the files and directories described bellow:
+
+### Package tree
+
+    4SMacroBuilder/
+      README.md
+      README.pdf
+      setup.py
+      MacroBuilder/
+          __init__.py
+          MacroB.py
+          CustomPDB.py
+          MB_GUI.py
+          MB_launcher.py
+      Examples/
+          enterovirus/
+          hemo/
+          microtubul/
+          nucleosome/
+          phosphate/
+          proteasome/
+      templates/
+          **all templates**
+      doc/
+          report.md
 
 * README.md, README.pdf: the files containing the tutorial and information about our application.
-* MBlauncher.py: the command-line script to launch the program.
-* Tkinter.py: to launch the GUI.
-* MacroB.py: a module requiered by MBlauncher.py where are defined the classes of the program.
-* CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
-* Tests: a directory with several examples stored in sub-directories that serve as input to the program.
+* MacroBuilder: a fold with the following scripts:
+  - MBlauncher.py: the command-line script to launch the program.
+  - MacroB.py: a module requiered by MBlauncher.py where are defined the classes of the program.
+  - CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
+  - MB_GUI.py: a module to launch the Graphical User Interface.
+* Examples: a directory with several examples stored in sub-directories that serve as input to the program.
 * Models: an empty folder where the created complexes will be saved.
 * Templates: the raw PDB files from which we extracted the example pairwise interactions.
 * setup.py script: to install the program in the python side-packages.
+* doc: a folder with the report.
+
 
 Check that all this information has been correctly downloaded and that there is the script called *setup.py*.
 
 In order to be able to use all the scprits provided in 4SMacroBuilder the user has to install the package in the python site-packages.
 
 ```bash
-   $ python3 setup.py install
+   $ sudo python3 setup.py install
 ```
 Be sure to have the dependencies previously stated.
 
@@ -130,7 +152,7 @@ Another way to use the program is using the the GUI. To do so run the following 
 
 
 ```bash
-$ Tkinter.py
+$ MB_GUI.py
 ```
 For a detailed explanation of how to use the GUI check the *report.pdf*
 
@@ -189,12 +211,17 @@ We did a series of test normalizing by number of atoms and interactions. The mic
 
 As it can be seen in the following graph, the program follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run.
 
-Due to some aspects of our approach, some "infinite" structures as the microtubule is not modeled as expected. This could be possibly due to a random behavior when superposing different chains. 
+**graph**
 
-We don't apply any optimization method, so there are no option to optimze our model once it's finished. 
+Another factor that limit our program is that, due to some aspects of our approach, some "infinite" structures as the microtubule is not modeled as expected. This is possibly due to a random behavior implemented in the algorithm when adding subunits to the macrocomplex. 
+
+We don't offer an no option to optimze our model once it's finished. 
 
 ## Next Steps
 
-* It would be a good point to improve the approach in order build the correct shape of the microtubul. 
+It would be a good point to modify the algorithm approach which could improve the correct shape of the microtubul, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
 
 ## FAQS
+
+**Do I need PyMOL to launch and use the GUI?**
+<p><b>Answer:</b>No, it is not necessary, but it is advisable to install <a href="https://pymol.org/2/">PyMOL</a> in order to see the whole macrocomplex/es once they have been done.</p>
