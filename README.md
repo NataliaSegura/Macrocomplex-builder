@@ -16,8 +16,8 @@
   - [Command line arguments](#command-line-arguments) 
   - [GUI](#gui)
 - [Analysis of examples](#analysis-of-examples)
-  - [Proteosome](#proteosome)
   - [Enterovirus](#enterovirus)
+  - [Proteosome](#proteosome)
   - [Nucleosome](#nucleosome) 
 - [Strong Points](#strong-points)
 - [Limitations](#limitations) 
@@ -51,7 +51,7 @@ For the GUI the following ones are also necessary:
 ### Download and Installation
 
 In order to be able to use all the scprits provided in 4SMacroBuilder the user has to install the package in the python site-packages.
-
++
 ```bash
    $ sudo python3 setup.py install
 ```
@@ -90,38 +90,40 @@ This program needs an input of PDB files holding the protein pairwise interactio
 
 * The same sequence appearing in different PDB files has not to be identical, it can handle 95% of identity. 
 * The same sequence appearing in different files with the same and/or different names. 
-* Repeated chain interactions are not requiered as inputs (i.e. interaction A-A 10 times is treated as a single PDB). It solves infinite structures (i.e. Microtubul).
+* Repeated chain interactions are not requiered as inputs (i.e. interaction A-A 10 times is treated as a single PDB). It solves infinite structures (i.e. *Microtuble*).
 * Pairwise interactions wrongly given to the program. The program threshold for considering two chains as interacting together is 3.5 Amstrongs. If the user gives interactions with bigger distance, they are not considered as such.
+* A template PDB file containing the structure of the model to use it as a guideline.
 
 ### Tutorial
 
 In this section we make a brief explanation of how to use 4SMacroBuilder.
 
-#### Command line Standalone application
-
+#### Command line arguments
 
 ```bash
     $ MBlauncher.py -h
 
-    usage: MBlauncher.py [-h] -i, -input DIRECTORY [-o, -output OUTPUT]
-                     [-c MAX_CHAINS] [-n NUM_MODELS] [-d] [-v] [-t TEMPLATE]
+    usage: MBlauncher.py [-h] -i DIRECTORY [-o OUTPUT] [-c MAX_CHAINS]
+                         [-n NUM_MODELS] [-d] [-v]
+                         [-t TEMPLATE | -s STOICH_STRING]
 
     MacrocomplexBuilder is a python program designed to generate macrocomplex
     structures from simple pair inetractions
 
     optional arguments:
-      -h, --help            show this help message and exit
-      -i, -input DIRECTORY  Input directory where the pair interaction pdbs are
-                            located
-      -o, -output OUTPUT    Name of the output file, no extension is needed
-      -c MAX_CHAINS         Maximum number of chains that the user wants in the
-                            model
-      -n NUM_MODELS         Number of models that the program will compute
-      -d, --dirty           Generates an output file for each added chain to track
-                            how the program builds the complex
-      -v, --verbose         Shows what the program is doing
-      -t TEMPLATE           To discriminate against different models, a template can be
-                            given to calculate the RMSD
+      -h, --help        show this help message and exit
+      -i DIRECTORY      Input directory where the pair interaction pdbs are
+                        located
+      -o OUTPUT         Name of the output file, no extension is needed
+      -c MAX_CHAINS     Maximum number of chains that the user wants in the model
+      -n NUM_MODELS     Number of models that the program will compute
+      -d, --dirty       Generates an output file for each added chain to track how
+                        the program builds the complex
+      -v, --verbose     Shows what the program is doing
+      -t TEMPLATE       To discriminate against different models, a template can
+                        be given to calculate the RMSD
+      -s STOICH_STRING  The user can also give the desired stechiometry in this
+                        format: A:6,B:11,C:2 ...
 ```
 
 #### GUI
@@ -131,26 +133,55 @@ Another way to use the program is using the the GUI. To do so run the following 
 ```bash
 $ MB_GUI.py
 ```
-For a detailed explanation of how to use the GUI check the *report.pdf*
 
 To get a better understanding of how to run the programme properly, we show different examples that represent different inputs that may be provided. The main aspects that may differ the inputs are: number of different chain interactions and number of atoms of the whole macrocomplex.
 
+#### Enterovirus
 
-### Analysis of examples
+The 3j23 PDB entry is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). EV71 is a single-stranded positive-sense RNA virus and a causative agent of hand, food, and mouth disease. 3j23 is a macrocomplex with three unique protein chains and a stoichiometry of hetero 180-mer-A60B60C60 with 4, 5 and 7 interaction sites in each chain respectively.
+Giving a set of protein-protein interactions, 4SMacroBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both (*Figures 1*).   
 
-Using the template (-t) optional argument. The program can compare between the model it's created and a given template. Using this we can analyse the quality of some reconstructed macrocomplexes.
+To achieve this complex we can run:
 
+```python
+python3 MBlauncher.py -i enterovirus/ -o enterovirus -v
+```
+
+Where enterovirus/ is the Directory containing all input files, enterovirus is the file where the output will be saved in the current directory, and -v means that the standard error will be printed. 
+This is a clear example of one of the strong points of our program: given 8 interaction pairs is able to produce the whole capsid with 180 chains in correct position.
+
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/ent.png" alt="enterovirus_image" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>Figure 3</b></h4>
+          <p><i>Comparison between the 3j23 PDB entry (left) and the model created by 4SMacroBuilder(right)</i></p>
+        </div>
+      </div>
+    </div>
+  </div>
 #### Proteosome
 
-1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the protein peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
-Throught our template analysis we do not see any differences with respect the number of chains between the one created and the template. Further analysis is done by structural visual comparison using an interactive visualization and molecular structural analysis programm such as UCSF CHIMERA. We can't oberve any differences in their structure, the superposition done is totally perfect. 
+The 1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
+
+To achieve this complex we can run:
+
+```python
+python3 MBlauncher.py -i proteasome/ -o proteasoma -v -c 28
+```
+
+Where proteasome/ is the Directory containing all input files, proteasome is the file where the output will be saved in the current directory, -v means that the standard error will be printed, and 28 means that we are limiting the number of chains the model will have.
+
+Even if in these case it is not necessary to limit the number of chains, we limited to 28 to show that the program will correctly construct the model. This will work with all the models this optional argument is given.
 
 <div class="row">
     <div class="col-md-12">
       <div class="thumbnail">
         <img src="/images/proteosome.png" alt="proteosome_superimposed_image" style="width:500px;height:400px">
         <div class="caption">
-          <h4><b>Figure 1</b></h4>
+          <h4><b>Figure 3</b></h4>
           <p><i>In blue we see the 1pma PDB protein and in brown the model created by 4SMacroBuilder</i></p>
         </div>
       </div>
@@ -158,44 +189,26 @@ Throught our template analysis we do not see any differences with respect the nu
   </div>
 
 
-#### Enterovirus
-
-3j23 PDB entry is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). EV71 os a single-stranded positive-sense RNA virus and a causative agent of hand, food, and mouth disease. 3j23 is a macrocomplex with three unique protein chains and a stoichiometry of hetero 180-mer-A60B60C60 with 4, 5 and 7 in each chain respectively.
-Giving a set of protein-protein interactions, 4SMacroBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both(image ***XX AND YY***).   
-
-<div class="row">
-    <div class="col-md-6">
-      <div class="thumbnail">
-        <img src="/images/3j23_enterovirus.png" alt="template_image" style="width:500px;height:400px">
-        <div class="caption">
-          <h4><b>Figure 2</b></h4>
-          <p><i>3j23 PDB Enterovirus 71 empty capsid</i></p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="thumbnail">
-        <img src="/images/enterovirus.png" alt="enterovirus_image" style="width:500px;height:400px">
-        <div class="caption">
-          <h4><b>Figure 3</b></h4>
-          <p><i>Enterovirus model created by 4SMacroBuilder</i></p>
-        </div>
-      </div>
-    </div>
-</div>
-
 #### Nucleosome
 
-3kuy PDB entry is the DNA stretching in the nucleosome core of *Escherichia coli* (https://www.rcsb.org/structure/3kuy).The DNA stretching in the nucleosome core can cause dramatic structural distortions, which may influence compaction and factor recognition in chromatin. It has a Stoichiometry of hetero 8-mer-A6B2.
+As an optional argument, 4SMacroBuilder can accept global stechiometry. If the user desires, it can be given and the program will create the model according to the given stechiometry.To achieve this complex we can run:
+
+```python
+python3 MBlauncher.py -i nucl/ -o nucl -v -s A6:B2
+```
+Where nucl/ is the Directory containing all input files, nucl is the file where the output will be saved in the current directory, -v means that the standard error will be printed, and A6:B2 means that the global stechiometry will be this one.
+
+The 3kuy PDB entry is the DNA stretching in the nucleosome core of *Escherichia coli* (https://www.rcsb.org/structure/3kuy).The DNA stretching in the nucleosome core can cause dramatic structural distortions, which may influence compaction and factor recognition in chromatin. It has a Stoichiometry of hetero 8-mer-A6B2.
 4SMacroBuilder is able to create this protein - nucleic acid macrocomplex with 4 protein chains and 2 nucleotic acid chains with a total of 28 different pairwise interactions.
+
 
 <div class="row">
     <div class="col-md-12">
       <div class="thumbnail">
-        <img src="/images/nucleosome.png" alt="model_nucleosome_image" style="width:500px;height:400px">
+        <img src="/images/nucl.png" alt="model_nucleosome_image" style="width:500px;height:400px">
         <div class="caption">
           <h4><b>Figure 4</b></h4>
-          <p><i>Proteosome model created by 4SMacroBuilder</i></p>
+          <p><i>Comparison between the nucleosome created limiting it stechiometry to A:6,B:2 (right) and the one created without stechiometry limitations (left)</i></p>
         </div>
       </div>
     </div>
@@ -265,6 +278,9 @@ Another factor that limit our program is that, due to some aspects of our approa
 
 Although the program can be asked to build more than one model from the same input, it is not able to deduce and build more than one output when there could be more than one possible solution. 
 
+*4*. **Global stechiometry**
+
+The aim of the optional argument stechiometry is to solve the ATP problem. In that way, the problem 
 ## Next Steps
 
 *What could be the next future improvements?*
