@@ -57,6 +57,7 @@ You can download our package using Git with the next command:
   $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
   $ cd MacroBuilder
  ```
+At this pont, the directory 4SMacroBuilder should contain the files and directories described bellow:
 
 #### Package tree
 
@@ -190,7 +191,7 @@ This is a clear example of one of the strong points of our program: given 8 inte
       </div>
     </div>
   </div>
-  
+
 #### Proteosome
 
 The 1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
