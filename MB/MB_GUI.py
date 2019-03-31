@@ -60,9 +60,9 @@ class MB(Frame):
 
     def create_options(self):
         """Creates the label and frame for the option's widget"""
-        self.options = LabelFrame(self, text="Options", padx=5, pady=5)
+        self.options = LabelFrame(self, text="Options")
         self.create_options_frame()
-        self.options.grid(row=0, column=0)
+        self.options.grid(row=0, column=0, stick="we", columnspan=2)
 
     def clear_template(self):
         """Clears the template's path"""
@@ -92,33 +92,33 @@ class MB(Frame):
         label_stech.grid(row=5, column=0, sticky="w")
         entry_label_stech.grid(row=5, column=1, columnspan=2, sticky="w")
         label_current_dir.grid(row=0, column=0, sticky="w")
-        label_current_dir_path.grid(row=0, column=1, sticky="w", columnspan=6)
+        label_current_dir_path.grid(row=0, column=1, sticky="w", columnspan=3)
         label_output.grid(row=1, column=0, sticky="w")
         entry_output.grid(row=1, column=1, sticky="w")
         label_num_chains.grid(row=2, column=0, sticky="w")
         self.entry_max_chains.grid(row=2, column=1, sticky="w")
         label_num_models.grid(row=3, column=0, sticky="w")
         self.entry_num_models.grid(row=3, column=1, sticky="w")
-        self.label_dirty.grid(row=1, column=2, sticky="w", columnspan=2)
-        self.label_verbose.grid(row=2, column=2, sticky="w", columnspan=2)
+        self.label_dirty.grid(row=1, column=2, sticky="w", columnspan=3)
+        self.label_verbose.grid(row=2, column=2, sticky="w", columnspan=3)
         label_template.grid(row=4, column=0, sticky="w")
         entry_template.grid(row=4, column=1, sticky="w")
         label_template_path.grid(row=4, column=2)
-        self.entry_run.grid(row=2, column=5, sticky="w")
+        self.entry_run.grid(row=2, column=6, sticky="w")
         frame.grid(row=0)
 
     def create_sequence_dict(self):
         """Creates the label and frame of sequence dictionary widget"""
-        self.seq_dict_frame = LabelFrame(self, text="Sequences", padx=5, pady=5)
+        self.seq_dict_frame = LabelFrame(self, text="Sequences")
         self.create_sequence_dict_frame()
-        self.seq_dict_frame.grid(row=1, column=0)
+        self.seq_dict_frame.grid(row=1, column=0, stick="wn")
 
     def create_sequence_dict_frame(self):
         """Creates contents of the seqquence dictionary widget """
         seq_frame = Frame(self.seq_dict_frame)
         scrollbar_v = Scrollbar(seq_frame, orient=VERTICAL)
         scrollbar_h = Scrollbar(seq_frame, orient=HORIZONTAL)
-        self.seq_listbox = Text(seq_frame, yscrollcommand=scrollbar_v.set, xscrollcommand=scrollbar_h.set, width=70,
+        self.seq_listbox = Text(seq_frame, yscrollcommand=scrollbar_v.set, xscrollcommand=scrollbar_h.set, width=90,
                                 height=6, state=DISABLED, wrap="none", background="black", foreground="white")
         scrollbar_v.config(command=self.seq_listbox.yview)
         scrollbar_h.config(command=self.seq_listbox.xview)
@@ -129,15 +129,15 @@ class MB(Frame):
 
     def create_estequiometry(self):
         """Creates the label and the frame of stechometry widget"""
-        self.estequiometry_frame = LabelFrame(self, text="Estequiometry", padx=5, pady=5)
+        self.estequiometry_frame = LabelFrame(self, text="Model composition")
         self.create_estequiometry_frame()
-        self.estequiometry_frame.grid(row=2, column=0)
+        self.estequiometry_frame.grid(row=2, column=0, stick="wn")
 
     def create_estequiometry_frame(self):
         """Creates the content of the stechometry widget"""
         frame = Frame(self.estequiometry_frame)
         scrollbar = Scrollbar(frame, orient=HORIZONTAL)
-        self.estequiometry_listbox = Text(frame, xscrollcommand=scrollbar.set, width=70, height=2,
+        self.estequiometry_listbox = Text(frame, xscrollcommand=scrollbar.set, width=90, height=2,
                                           state=DISABLED, background="black", foreground="white")
         # scrollbar.config(command=self.seq_listbox.yview)
         scrollbar.pack(side=BOTTOM, fill=X)
@@ -148,17 +148,17 @@ class MB(Frame):
         """Generates the label and console widget"""
         self.console_frame = LabelFrame(self, text="Console", padx=5, pady=5)
         self.create_console_frame()
-        self.console_frame.grid(row=0, column=1, rowspan=5)
+        self.console_frame.grid(row=1, column=1, rowspan=3, stick="ns")
 
     def create_console_frame(self):
         """Generates the console widget"""
         frame = Frame(self.console_frame)
         scrollbar = Scrollbar(frame, orient=VERTICAL)
-        self.console = Text(frame, yscrollcommand=scrollbar.set, width=60, height=50, state=DISABLED, wrap='word',
+        self.console = Text(frame, yscrollcommand=scrollbar.set, width=60, height=30, state=DISABLED, wrap='word',
                             background="black", foreground="white")
-        scrollbar.pack(side=RIGHT, fill=Y)
+        scrollbar.grid(row=0,column=1, stick="ns")
         scrollbar.config(command=self.console.yview)
-        self.console.pack(side=LEFT, expand=True, fill=BOTH)
+        self.console.grid(row=0,column=0, stick="ns")
         sys.stdout = StdRedirector(self.console)
         sys.stderr = StdRedirector(self.console)
         frame.grid(row=0)
@@ -168,21 +168,21 @@ class MB(Frame):
         cwd = os.getcwd()
         best_model_name = cwd +"/"+ output_name.get()+"_1.cif"
         image_name = "%s/%s.png" % (cwd,output_name.get()+"_1")
-        os.system("pymol %s -c -d 'hide all;show ribbon;util.cbc' -g %s " % (best_model_name, image_name))
+        os.system("pymol %s -c -d 'hide all;show ribbon;util.cbc;png %s, width=300, height=300'" % (best_model_name, image_name))
         image = PhotoImage(file=image_name)
-        self.model_image.create_image(300, 250, anchor=CENTER, image=image)
+        self.model_image.create_image(150, 150, anchor=CENTER, image=image)
         self.model_image.image = image
 
     def create_image(self):
         """Generates the image label"""
-        self.image_frame = LabelFrame(self, text="Structure", padx=5, pady=5)
+        self.image_frame = LabelFrame(self, text="Structure")
         self.create_image_frame()
-        self.image_frame.grid(row=3, column=0)
+        self.image_frame.grid(row=3, column=0, stick="n")
 
     def create_image_frame(self):
         """Generates the image frame"""
         frame = Frame(self.image_frame)
-        self.model_image = Canvas(frame, width=600, height=500, background="black")
+        self.model_image = Canvas(frame, width=300, height=300, background="black")
         self.model_image.pack()
         frame.grid(row=0, column=1)
 
@@ -267,7 +267,9 @@ class MB(Frame):
         """Initalizates the app"""
         Frame.__init__(self, master, **kwargs)
         self.master.wm_title("Macrocomplex Builder")
-        self.master.resizable(width=False, height=False)
+        self.master.resizable(width=True, height=True)
+        self.master.grid_rowconfigure(0, weight=1)
+        self.master.grid_columnconfigure(0, weight=1)
         self.createWidgets()
 
 
@@ -276,6 +278,7 @@ if not os.path.exists('tmp'):
 if not os.path.exists('models'):
     os.mkdir('models')
 root = Tk()
+root.geometry("1300x800")
 directory = StringVar()
 template_path = StringVar()
 template_path.set("")
