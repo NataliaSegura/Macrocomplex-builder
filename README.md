@@ -145,6 +145,56 @@ Another way to use the program is using the the GUI. To do so run the following 
 ```bash
 $ MB_GUI.py
 ```
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/whole_GUI.png" alt="whole_GUI" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>GUI</b></h4>
+          <p>Here is the main structure of the GUI. First there is the Options widged where the user can select what parammeters to use for the modeling. Then there is the console panel where both the stderr and stdout will be shown, if the user wants more information there is the option verbose which will print each action that the program does. Next there is the Sequence widget, where the model sequences and their id's will be shown. At its bottom, there's the Structure composition panel where the model's chain composition is shown. Finally, a n image of the resulting model is shown at the bottom. (For Sequence, Structure and Image, all of the information shown is from the first model). </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+To use the program, first a directory must be selected. One can do this by going to File>Select Directory:
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/selecting_directory.png" alt="select_dir" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>GUI</b></h4>
+          <p>To correctly select an input directory, the user must enter INSIDE the directory in the navigation window and press OK. </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+Then, the user can change any of the options in the option panel, let's make just one model of a Proteosome to show it really works and select the option verbose to see what the program is doing. We press RUN to tun the program:
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/options_before_run.png" alt="options_b4_run" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>GUI</b></h4>
+          <p>Here the model will make just one model, with the name proteasoma_1.cif and without checking structure composition. </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+Finally we can see how the program has build this proteasoma really fast. 
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/final_result.png" alt="final_result" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>GUI</b></h4>
+          <p>The sequence, structure composition, structure and console have been updated</p>
+        </div>
+      </div>
+    </div>
+  </div>
 ### Analysis of examples
 
 To get a better understanding of how to run the programme properly, we show different examples that represent different inputs that may be provided. The main aspects that may differ the inputs are: number of different chain interactions and number of atoms of the whole macrocomplex.
