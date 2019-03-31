@@ -190,7 +190,7 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
 
 ## Strong Points
 
-1. **Dynamic programming implementation**
+*1*. **Dynamic programming implementation**
 
 The algorithm is based in a dynamic programming implementaton, in such a way that the final output is retrived in a very short time. This is due to the fact tha we use the interactions between chains as a previous knowlege to solve the final problem (*see documentation*). 
 
