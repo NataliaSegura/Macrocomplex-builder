@@ -241,20 +241,21 @@ Although the program can be asked to build more than one model from the same inp
 
 *What could be the next future improvements?*
 
-1. **Model Energy Minimization**
+*1*. **Model Energy Minimization**
 
 It could be implemented an option of energy optimization by molecular dynamics once the model/s are finished. Protein structures often have errors 
  
  
 
-2. **Model Energy Minimization**
+*2*. **Model Energy Minimization**
 
 
-3. **Microtubul modeling**
+*3*. **Microtubul modeling**
 
 It would be a good point to modify the algorithm approach which could improve the correct shape of the microtubul, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
 
 ## FAQS
 
 **Do I need PyMOL to launch and use the GUI?**
+
 **Answer**:No, it is not necessary, but it is advisable to install [Pymol](https://pymol.org/2/) in order to see the whole macrocomplex/es once they have been done.
