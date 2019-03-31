@@ -67,11 +67,11 @@ One of the main limitations dealing with the creation of a macrocomplex is the n
 
 We did a series of tests normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 4 interactions by chain. 
 
+>![**Microtuble model created with MacrocomplexBuilder with 250 chains and 412.331 seconds.**](../images/microtuble.png "atp_250_chains_image")  
+
 Thanks to the illimited number of chains input that we can test when creating the microtuble we can asses its growing time curve. As it can be seen in the following graph, it might seem that until 200 chains the program followed a linear tendency but when a bigger number of calculations and steps was needed to create the microtuble, i.e. more chains, this behaviour is proven wrong. In fact, the program really follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run in an exopenential way.
 
 >![**Time performing program analysis. In the X-axis there is the number of chains the user can provide with the -t optional argument and in the Y-axis there is the time in seconds MacrocomplexBuilder needs.**](../images/analysis.png "approach_explanation_image"){width=50.3%}   
-
->![**Microtuble model created with MacrocomplexBuilder with 250 chains and 412.331 seconds.**](../images/microtuble.png "atp_250_chains_image")  
 
 ### Strong Points
 
