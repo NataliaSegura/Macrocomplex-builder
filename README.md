@@ -410,7 +410,7 @@ The problem with these macrocomplex is the number of interactions it has and the
 **Will heteroatoms also be included in the final macrocomplex?**
 *Answer*Yes indeed, if the inputs pdbs had heteroatoms in them they will be present in the final structure. 
 
-**Can I open the resulting macrocomplex in chimera insted of pymol?*
+**Can I open the resulting macrocomplex in chimera insted of pymol?**
 *Answer*Yes, but because the macrocomplex files are saved in mmCIF format they take 50 times more to open in chimera than normal pdb files so it's not recommended (at least for big structures like capsid). Also, macrocomplexes with DNA and RNA chains cannot be opened with chimera if the mmCIF format is used, so these structures will have to be opened with pymol. 
 
 **How fast is the program?**
