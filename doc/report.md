@@ -32,7 +32,7 @@ The main scope of this project is to reconstruct protein macrocomplexes from ind
 
 Macrocomplexes are built with an specific spatial order of subunits interacting with other subunits, and are usually stabilized by an hydrophobic core. This means that proteins interact between them with residues that don't like water (hydrophobic), and as a counterpart expose to the solvent those other residues that do like water (hydrophilic).
 
->![**Here A,B,C are chains/subunits of the macrocomplex and may differ in sequence and structures**](../images/approach.png "approach_explanation_image") 
+>![**Here A,B,C are chains/subunits of the macrocomplex and may differ in sequence and structures**](../images/approach.png "approach_explanation_image")
 
 If we start from scratch to reconstruct a complex of subunits we need to know at least the number of chains that will build that macrostructure. 
 
@@ -109,7 +109,7 @@ The active site of a protein often is composed by anions and cations. This infor
 
 *1*. **Increase of the computational cost with number of atoms in macrocomplex**
 
-As it can be seen in the *Figure 4*, the programs follows an exponential curve. The more atoms and interactions it has to check, the longer it takes to process.
+As it can be seen in the *Figure 3*, the programs follows an exponential curve. The more atoms and interactions it has to check, the longer it takes to process.
 
 *2*. **Microtuble modeling**
 
@@ -121,7 +121,7 @@ Although the program can be asked to build more than one model from the same inp
 
 *4*. **The ATP problem and global stechiometry**
 
-The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way. 
+The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way (*Figure4*).
 
 >![**ATP Synthase template (rigth) and the one created by the program with an stechiometry of A:1,B:1,C:1,D:1,E:2,F:1,G:3,H:1,I:8,J:1,K:1,L:1 (left)**](../images/atp.png "atp_image") 
 
@@ -140,7 +140,7 @@ It would be a good point to modify the algorithm approach which could improve th
 
 *3*. **ATP Synthase modeling**
 
-The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. THat way, we limit the interactions and we force the macrocomplex into a specific shape. One way to do it could be that given a template, the program calculates the stechiometry and use it to create the model.
+The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. One way to do it could be that given a template, the program calculates the stechiometry and use it to create the model.
 
 ### References
 
@@ -153,5 +153,6 @@ Jeffrey, George A.; An introduction to hydrogen bonding, Oxford University Press
 * Before two chains are superimposed, in order to determinate if they will be or not, we will check if they have clashes. The threshold that we use is by measuring the atomic distance. If the distance is 2 Amstrongs or less and there is more than a 3% of the alpha carbons atoms in proteins and the carbon one in nucleic acid atoms has clashes we will not superpose them.  
 Values of Vanderwalls radius taken from: http://ww2.chemistry.gatech.edu/~lw26/structure/molecular_interactions/mol_int.html
 Batsanov S.S.; Van der Waals Raddi of Elements, Inorganic Materials, 2001.
+
 
 
