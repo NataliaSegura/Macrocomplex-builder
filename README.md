@@ -76,7 +76,7 @@ The package has the following structure:
       Examples/
           enterovirus/
           hemo/
-          microtubul/
+          microtuble/
           nucleosome/
           phosphate/
           proteasome/
@@ -253,7 +253,7 @@ The algorithm is based in a dynamic programming implementaton, in such a way tha
 *2*. **Input managing**
 
   - The input names does not affect to the output (i.e. if all PDB files are named XY.pdb).
-  - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtubul, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtubul).
+  - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtuble, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtuble).
   - If the user gives a non-existing or wrong interaction the program ignores it and keeps going.
 
 *3*. **Obtain different models**
@@ -329,7 +329,7 @@ It could be implemented an option of energy optimization to a local energy minim
  
 *2*. **Microtuble modeling**
 
-It would be a good point to modify the algorithm approach which could improve the correct shape of the microtubule, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
+It would be a good point to modify the algorithm approach which could improve the correct shape of the microtuble, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
 
 *3*. **ATP Synthase modeling**
 
