@@ -59,7 +59,7 @@ At this pont, the directory 4SMacroBuilder should contain the files and director
 
 ### Package tree
 
-    4SMacroBuilder/
+    Macrocomplex-Builder/
       README.md
       README.pdf
       setup.py
@@ -243,14 +243,9 @@ Although the program can be asked to build more than one model from the same inp
 
 *1*. **Model Energy Minimization**
 
-It could be implemented an option of energy optimization by molecular dynamics once the model/s are finished. Protein structures often have errors 
+It could be implemented an option of energy optimization to a local energy minimum by molecular dynamics once the model/s has been finished. Protein structures often have errors of various magnitude: atoms overlapping, wrong side chain orientation (lack of water molecules when modeling). An energy minimization would look for the pathway that reduces the most in the overall energy of the system, obtaining a best approach of the final structure if possible. It could be reached with programs as **Amber**, that combines molecular mechanical force fields with biomolecular simularions. 
  
- 
-
-*2*. **Model Energy Minimization**
-
-
-*3*. **Microtubul modeling**
+*2*. **Microtubul modeling**
 
 It would be a good point to modify the algorithm approach which could improve the correct shape of the microtubul, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
 
@@ -258,4 +253,4 @@ It would be a good point to modify the algorithm approach which could improve th
 
 **Do I need PyMOL to launch and use the GUI?**
 
-**Answer**:No, it is not necessary, but it is advisable to install [Pymol](https://pymol.org/2/) in order to see the whole macrocomplex/es once they have been done.
+*Answer*:No, it is not necessary, but it is advisable to install [Pymol](https://pymol.org/2/) in order to see the whole macrocomplex/es once they have been done.
