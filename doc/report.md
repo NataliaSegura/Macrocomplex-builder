@@ -63,6 +63,87 @@ Then, our program would start to structurally superimpose structures with at lea
 And know, when we read the PDB files, for each chain we load into memory the interacting residues. Besides, we store in the same set which is the model of the corresponding interaction, so that we know which is the model to superimpose later. At the end we will have a dictionary with each chain as key and all the information as values: interacting residues, interacting chain pair names, interacting residues for the other chain. Once we have this we update the interaction dictionary of each chain inside the dictionary to have the information in it. One point to remark is that when the updating is done the same interaction is not inserted twice or more.
 The superimposition will start with the chain with more interactions, to avoid starting for a wrongly given interaction that just interact with itself and once the initial model is chosen the rest will be randomly added. When the superposing occurs we use an internal checklist to know for each chain which interactions are done and which ones are to be checked and superimposed. But if a chain appears more than once in the complex, each of them will have its checklist to complete. That way we ensure that all interactions are done.
 
+### Examples
+
+To get a better understanding of how to run the programme properly, we show different examples that represent different inputs that may be provided. The main aspects that may differ the inputs are: number of different chain interactions and number of atoms of the whole macrocomplex.
+
+#### Enterovirus
+
+The 3j23 PDB entry is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). EV71 is a single-stranded positive-sense RNA virus and a causative agent of hand, food, and mouth disease. 3j23 is a macrocomplex with three unique protein chains and a stoichiometry of hetero 180-mer-A60B60C60 with 4, 5 and 7 interaction sites in each chain respectively.
+Giving a set of protein-protein interactions, MacrocomplexBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both (*Figures 1*).   
+
+To achieve this complex we can run:
+
+```python
+python3 MBlauncher.py -i enterovirus/ -o enterovirus -v
+```
+
+Where enterovirus/ is the Directory containing all input files, enterovirus is the file where the output will be saved in the current directory, and -v means that the standard error will be printed. 
+This is a clear example of one of the strong points of our program: given 8 interaction pairs is able to produce the whole capsid with 180 chains in correct position.
+
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/ent.png" alt="enterovirus_image" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>Figure 1</b></h4>
+          <p><i>Comparison between the 3j23 PDB entry (left) and the model created by MacrocomplexBuilder(right)</i></p>
+        </div>
+      </div>
+    </div>
+  </div>
+#### Proteosome
+
+The 1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
+
+To achieve this complex we can run:
+
+```python
+python3 MBlauncher.py -i proteasome/ -o proteasoma -v -c 28
+```
+
+Where proteasome/ is the Directory containing all input files, proteasome is the file where the output will be saved in the current directory, -v means that the standard error will be printed, and 28 means that we are limiting the number of chains the model will have.
+
+Even if in these case it is not necessary to limit the number of chains, we limited to 28 to show that the program will correctly construct the model. This will work with all the models this optional argument is given.
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/proteosome.png" alt="proteosome_superimposed_image" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>Figure 2</b></h4>
+          <p><i>In blue we see the 1pma PDB protein and in brown the model created by MacrocomplexBuilder</i></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+#### Nucleosome
+
+As an optional argument, MacrocomplexBuilder can accept global stechiometry. If the user desires, it can be given and the program will create the model according to the given stechiometry.To achieve this complex we can run:
+
+```python
+python3 MBlauncher.py -i nucl/ -o nucl -v -s A6:B2
+```
+Where nucl/ is the Directory containing all input files, nucl is the file where the output will be saved in the current directory, -v means that the standard error will be printed, and A6:B2 means that the global stechiometry will be this one.
+
+The 3kuy PDB entry is the DNA stretching in the nucleosome core of *Escherichia coli* (https://www.rcsb.org/structure/3kuy).The DNA stretching in the nucleosome core can cause dramatic structural distortions, which may influence compaction and factor recognition in chromatin. It has a Stoichiometry of hetero 8-mer-A6B2.
+MacrocomplexBuilder is able to create this protein - nucleic acid macrocomplex with 4 protein chains and 2 nucleotic acid chains with a total of 28 different pairwise interactions.
+
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/nucl.png" alt="model_nucleosome_image" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>Figure 3</b></h4>
+          <p><i>Comparison between the nucleosome created limiting it stechiometry to A:6,B:2 (right) and the one created without stechiometry limitations (left)</i></p>
+        </div>
+      </div>
+    </div>
+</div>
 
 ### References
 
