@@ -40,30 +40,23 @@ Below is shown how to install and use this program as a stand-alone command line
 These are the software and its versions required for the MacrocomplexBuilder functionality and execution:
 
   * [Python 3.6](https://www.python.org/downloads/)
-  * [Pymol](https://pymol.org/2/)
-
+ 
 
 For the GUI the following ones are also necessary:
 
   * [Tkinter (for the GUI interface)](https://wiki.python.org/moin/TkInter)
+  * [Pymol](https://pymol.org/2/)
 
 
 ### Download and Installation
 
-In order to be able to use all the scprits provided in MacrocomplexBuilder the user has to install the package in the python site-packages.
-
+You can download our package using Git with the next command:
+ 
 ```bash
-   $ sudo python3 setup.py install
-```
-Be sure to have the dependencies previously stated.
-
-And now from any directory of the terminal you can run both of these commands to run the program:
-
-```bash
-    $ MBlauncher.py -h
-    $ MB_GUI.py
-```    
-
+  $ git clone https://github.com/NataliaSegura/Macrocomplex-builder.git
+  $ cd Macrocomplex-Builder
+ ```
+At this pont, the directory Macrocomplex-Builder should contain the files and directories described bellow:
 
 #### Package tree
 
@@ -73,7 +66,7 @@ The package has the following structure:
       README.md
       README.pdf
       setup.py
-      MacroBuilder/
+      MB/
           __init__.py
           MacroB.py
           CustomPDB.py
@@ -82,14 +75,40 @@ The package has the following structure:
       Examples/
           enterovirus/
           hemo/
-          microtubul/
+          microtuble/
           nucleosome/
           phosphate/
           proteasome/
-      templates/
-          **all templates**
+      Templates/
+          3j23_enterovirus/
+          1a3n_hemo/
+          5syg_microtuble/
+          3kuy_nucleosome/
+          2f1d_phosphate/
+          1pma_proteosome/
       doc/
           report.md
+
+* README.md, README.pdf: the files containing the tutorial and information about our application.
+* MB: a fold with the following scripts:
+  - MBlauncher.py: the command-line script to launch the program.
+  - MacroB.py: a module requiered by MBlauncher.py where are defined the classes of the program.
+  - CustomPDB.py: a module required by MacroB.py where are defined the functions of the program.
+  - MB_GUI.py: a module to launch the Graphical User Interface.
+* Examples: a directory with several examples stored in sub-directories that serve as input to the program.
+* Models: an empty folder where the created complexes will be saved.
+* Templates: the raw PDB files from which we extracted the example pairwise interactions.
+* setup.py script: to install the program in the python side-packages.
+* doc: a folder with the report.md fie and report.pdf, as well as the documentation.
+
+Check that all this information has been correctly downloaded and that there is the script called *setup.py*.
+
+In order to be able to use all the scprits provided in MacrocomplexBuilder the user has to install the package in the python site-packages.
+
+```bash
+   $ sudo python3 setup.py install
+```
+Be sure to have the dependencies previously stated.
 
 
 ### Input Files
