@@ -10,7 +10,6 @@
 - [Background and Scientific explanation](#Background-and-Scientific-explanation)
 - [Algorithm implementation](#Algorithm-implementation)
 - [References](#References)
-- [Pandoc](#Pandoc)
 <!-- /TOC -->
 
 
@@ -76,16 +75,3 @@ Jeffrey, George A.; An introduction to hydrogen bonding, Oxford University Press
 * Before two chains are superimposed, in order to determinate if they will be or not, we will check if they have clashes. The threshold that we use is by measuring the atomic distance. If the distance is 2 Amstrongs or less and there is more than a 3% of the alpha carbons atoms in proteins and the carbon one in nucleic acid atoms has clashes we will not superpose them.  
 Values of Vanderwalls radius taken from: http://ww2.chemistry.gatech.edu/~lw26/structure/molecular_interactions/mol_int.html
 Batsanov S.S.; Van der Waals Raddi of Elements, Inorganic Materials, 2001.
-
-### Pandoc 
-
-```bash
-    pandoc -f markdown+pandoc_title_block   \
-           -t latex                         \
-           --variable papersize:a4paper     \
-           --variable geometry:margin=1.5cm \
-           --variable fontsize=10pt         \
-           --highlight-style pygments       \
-           -o report.pdf \
-              report.md
-```
