@@ -1,3 +1,4 @@
+# coding=utf-8
 from MacroB import build_macrocomplex
 from argparse import ArgumentParser
 

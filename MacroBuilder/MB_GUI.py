@@ -1,3 +1,4 @@
+# coding=utf-8
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
@@ -8,33 +9,38 @@ import threading
 
 
 class StdRedirector():
+    """Class that redirects the stdout and stderr to the GUI console"""
     def __init__(self, text_widget):
         self.text_space = text_widget
 
     def write(self, string):
+        """Updates the console widget with the stdout and stderr output"""
         self.text_space.config(state=NORMAL)
         self.text_space.insert("end", string)
         self.text_space.see("end")
         self.text_space.config(state=DISABLED)
 
 class MB(Frame):
-    def show_help(self):
-        messagebox.showinfo(title="Help", message="Here I should show the document with the help of the program")
-
     def show_about(self):
-        messagebox.showinfo(title="About", message="This program has been done in the PYT subject")
+        messagebox.showinfo(title="About", message="This program has been done in the PYT subject by Natàlia Segura, "
+                                                   "Altaïr CHinchilla and Pau Badia. For more information visit:\n"
+                                                   "https://github.com/NataliaSegura/Macrocomplex-builder")
     def quit(self):
+        """EXists the application"""
         if messagebox.askyesno("Quit", "Are you sure you want to exit?"):
             Frame.quit(self)
 
     def get_dir(self):
+        """Gets the input directory path"""
         directory.set(filedialog.askdirectory())
 
     def get_template(self):
+        """Gets the template path"""
         template_path.set(filedialog.askopenfilename(title="Select a template structure file", filetypes=[
             ("PDB files", "*.pdb"), ("mmCIF files", "*.cif")]))
 
     def create_menu(self):
+        """Creates the menu of the app"""
         self.menubar = Menu(self)
 
         # CREATE THE FILEMENU
@@ -45,7 +51,6 @@ class MB(Frame):
 
         # CREATE THE HELP MENU
         helpmenu = Menu(self.menubar)
-        helpmenu.add_command(label="Help", command=self.show_help)
         helpmenu.add_command(label="About", command=self.show_about)
 
         self.menubar.add_cascade(label="File", menu=filemenu)
@@ -53,14 +58,17 @@ class MB(Frame):
         self.master.config(menu=self.menubar)
 
     def create_options(self):
+        """Creates the label and frame for the option's widget"""
         self.options = LabelFrame(self, text="Options", padx=5, pady=5)
         self.create_options_frame()
         self.options.grid(row=0, column=0)
 
     def clear_template(self):
+        """Clears the template's path"""
         template_path.set("")
 
     def create_options_frame(self):
+        """Creates the contents of the options widget"""
         frame = Frame(self.options)
         label_output = Label(frame, text="Output name")
         label_num_chains = Label(frame, text="Max number of chains")
@@ -99,11 +107,13 @@ class MB(Frame):
         frame.grid(row=0)
 
     def create_sequence_dict(self):
+        """Creates the label and frame of sequence dictionary widget"""
         self.seq_dict_frame = LabelFrame(self, text="Sequences", padx=5, pady=5)
         self.create_sequence_dict_frame()
         self.seq_dict_frame.grid(row=1, column=0)
 
     def create_sequence_dict_frame(self):
+        """Creates contents of the seqquence dictionary widget """
         seq_frame = Frame(self.seq_dict_frame)
         scrollbar_v = Scrollbar(seq_frame, orient=VERTICAL)
         scrollbar_h = Scrollbar(seq_frame, orient=HORIZONTAL)
@@ -117,11 +127,13 @@ class MB(Frame):
         seq_frame.grid(row=0)
 
     def create_estequiometry(self):
+        """Creates the label and the frame of stechometry widget"""
         self.estequiometry_frame = LabelFrame(self, text="Estequiometry", padx=5, pady=5)
         self.create_estequiometry_frame()
         self.estequiometry_frame.grid(row=2, column=0)
 
     def create_estequiometry_frame(self):
+        """Creates the content of the stechometry widget"""
         frame = Frame(self.estequiometry_frame)
         scrollbar = Scrollbar(frame, orient=HORIZONTAL)
         self.estequiometry_listbox = Text(frame, xscrollcommand=scrollbar.set, width=70, height=2,
@@ -132,11 +144,13 @@ class MB(Frame):
         frame.grid(row=0)
 
     def create_console(self):
+        """Generates the label and console widget"""
         self.console_frame = LabelFrame(self, text="Console", padx=5, pady=5)
         self.create_console_frame()
         self.console_frame.grid(row=0, column=1, rowspan=5)
 
     def create_console_frame(self):
+        """Generates the console widget"""
         frame = Frame(self.console_frame)
         scrollbar = Scrollbar(frame, orient=VERTICAL)
         self.console = Text(frame, yscrollcommand=scrollbar.set, width=60, height=50, state=DISABLED, wrap='word',
@@ -149,6 +163,7 @@ class MB(Frame):
         frame.grid(row=0)
 
     def update_image(self):
+        """Updates the image widget with the first macrocomplex model"""
         cwd = os.getcwd()
         best_model_name = cwd +"/"+ output_name.get()+"_1.cif"
         image_name = "%s/%s.png" % (cwd,output_name.get()+"_1")
@@ -158,11 +173,13 @@ class MB(Frame):
         self.model_image.image = image
 
     def create_image(self):
+        """Generates the image label"""
         self.image_frame = LabelFrame(self, text="Structure", padx=5, pady=5)
         self.create_image_frame()
         self.image_frame.grid(row=3, column=0)
 
     def create_image_frame(self):
+        """Generates the image frame"""
         frame = Frame(self.image_frame)
         self.model_image = Canvas(frame, width=600, height=500, background="black")
         self.model_image.pack()
@@ -170,6 +187,7 @@ class MB(Frame):
 
 
     def update_estequiometry(self, best_model):
+        """Updates the stecheometry widget"""
         stq_dict = generate_model_profile(best_model)
         self.estequiometry_listbox.config(state=NORMAL)
         self.estequiometry_listbox.delete(1.0, END)
@@ -179,6 +197,7 @@ class MB(Frame):
 
 
     def run_MB(self):
+        """Using MacroB functions, builds the macrocomplex"""
         self.in_pdbmodels = read_pdbs(directory.get()+"/", verbose.get())
         if self.in_pdbmodels:
             self.seq_dict = unify_ids(self.in_pdbmodels)
@@ -201,6 +220,7 @@ class MB(Frame):
         self.entry_run.config(state='normal')
 
     def thread_MB(self):
+        """Starts a new thread to run the modeling apart from the GUI"""
         if os.path.isdir(directory.get() + "/"):
             self.console.config(state=NORMAL)
             self.console.delete(1.0, END)
@@ -223,6 +243,7 @@ class MB(Frame):
             sys.stderr.write("Directory %s/ doesn't exists, please select a valid directory" % directory.get())
 
     def createWidgets(self):
+        """Creates all widgets"""
         self.create_menu()
         self.create_console()
         self.create_options()
@@ -232,6 +253,7 @@ class MB(Frame):
         self.grid(row=0)
 
     def update_seq_dict(self):
+        """Updates the sequence dictionary widget"""
         self.seq_listbox.config(state=NORMAL)
         self.seq_listbox.delete(1.0, END)
         for key in self.seq_dict:
@@ -241,6 +263,7 @@ class MB(Frame):
 
 
     def __init__(self, master=None, **kwargs):
+        """Initalizates the app"""
         Frame.__init__(self, master, **kwargs)
         self.master.wm_title("Macrocomplex Builder")
         self.master.resizable(width=False, height=False)

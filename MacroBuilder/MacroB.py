@@ -1,3 +1,4 @@
+# coding=utf-8
 from Bio.PDB.PDBParser import PDBParser
 from os import listdir
 import Bio.PDB.NeighborSearch
