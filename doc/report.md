@@ -32,10 +32,9 @@ The main scope of this project is to reconstruct protein macrocomplexes from ind
 
 Macrocomplexes are built with an specific spatial order of subunits interacting with other subunits, and are usually stabilized by an hydrophobic core. This means that proteins interact between them with residues that don't like water (hydrophobic), and as a counterpart expose to the solvent those other residues that do like water (hydrophilic).
 
+>![**Here A,B,C are chains/subunits of the macrocomplex and may differ in sequence and structures**](../images/approach.png "approach_explanation_image") 
+
 If we start from scratch to reconstruct a complex of subunits we need to know at least the number of chains that will build that macrostructure. 
-
->![**Here A,B,C are chains/subunits of the macrocomplex and may differ in sequence and structures**](../images/approach.png "approach_explanation_image"){width=50.3%}   
-
 
 In protein macrocomplexes there are several chains that interact with more than one chain, allowing the rest of interactions to be done. We could start by taking one of these pair interactions as a template (i.e. A-B), and then superimpose the rest of the interactions by protein superposition. We have to assume that at least one chain of the template interact with another subunit (in this example A-C). This way we could superpose those identical chains (A-A) and move the new pair interaction to the template. Therefore, we would obtain a resulting structure of three chains (*Figure 1*). If we repeat this process until all the simillar chains are superposed, then we would obtain the final macrocomplex.
 
