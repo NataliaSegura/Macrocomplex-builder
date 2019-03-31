@@ -227,7 +227,7 @@ Giving a set of protein-protein interactions, MacrocomplexBuilder is able to con
 To achieve this complex we can run:
 
 ```python
-python3 MBlauncher.py -i enterovirus/ -o enterovirus -v
+MBlauncher.py -i enterovirus/ -o enterovirus -v
 ```
 
 Where enterovirus/ is the Directory containing all input files, enterovirus is the file where the output will be saved in the current directory, and -v means that the standard error will be printed. 
@@ -253,7 +253,7 @@ The 1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.
 To achieve this complex we can run:
 
 ```python
-python3 MBlauncher.py -i proteasome/ -o proteasoma -v -c 28
+MBlauncher.py -i proteasome/ -o proteasoma -v -c 28
 ```
 
 Where proteasome/ is the Directory containing all input files, proteasome is the file where the output will be saved in the current directory, -v means that the standard error will be printed, and 28 means that we are limiting the number of chains the model will have.
@@ -278,7 +278,7 @@ Even if in these case it is not necessary to limit the number of chains, we limi
 As an optional argument, MacrocomplexBuilder can accept global stechiometry. If the user desires, it can be given and the program will create the model according to the given stechiometry.To achieve this complex we can run:
 
 ```python
-python3 MBlauncher.py -i nucl/ -o nucl -v -s A6:B2
+MBlauncher.py -i nucl/ -o nucl -v -s A6:B2
 ```
 Where nucl/ is the Directory containing all input files, nucl is the file where the output will be saved in the current directory, -v means that the standard error will be printed, and A6:B2 means that the global stechiometry will be this one.
 
