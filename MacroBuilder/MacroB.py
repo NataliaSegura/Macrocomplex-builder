@@ -232,7 +232,7 @@ def main_loop(num_models, output, interaction_dict, verbose=False, max_chains=10
                                 target_chain_id = interaction_dict[chain.id][inter_tple][1].id  # chain to be added
                                 if target_chain_id in model_stech:  # If it's in the stech model profile
                                     model_number_chain = model_stech[target_chain_id]  # Get the number of repetitions
-                                    # of this chain
+                                    # of this chain in the model
                                 else:
                                     model_number_chain = 0  # Otherwise it means it's still not in the model
                                 if stech_dict[target_chain_id] <= model_number_chain:  # If the number of this target
@@ -240,7 +240,7 @@ def main_loop(num_models, output, interaction_dict, verbose=False, max_chains=10
                                     if verbose:
                                         print("(S) Chain NOT added: interaction " + chain.id + ": " +
                                             str(inter_tple[:1]) + " ... " + str(inter_tple[-1]) + " to " + target_chain_id)
-                                        continue # jump to the next interaction tuple
+                                    continue # jump to the next interaction tuple
                             fix, to_move = interaction_dict[chain.id][inter_tple]  # Get the interaction chain instances
                             sup = Bio.PDB.Superimposer()  # Generates a superimposer instance
                             chain_atoms, fix_atoms = chain.get_common_atoms(fix) # Get common atoms between the
@@ -309,11 +309,15 @@ def get_template_stech_dict(template, seq_dict, verbose=False):
 def get_string_stech_dict(stech_string):
     """Given a stechometry string it transsforms it to a dictionary"""
     stech_dict = {}
-    stech_lst = stech_string.split(",")  # Generates a stech list: ["A:3", "B:2", ...]
-    for stech in stech_lst:
-        chain, number = stech.split(":")
-        stech_dict[chain] = int(number)  # Chain id as key and number as value: { "A": 3, "B": 2, ...}
-    return stech_dict
+    try:
+        stech_lst = stech_string.split(",")  # Generates a stech list: ["A:3", "B:2", ...]
+        for stech in stech_lst:
+            chain, number = stech.split(":")
+            stech_dict[chain] = int(number)  # Chain id as key and number as value: { "A": 3, "B": 2, ...}
+        return stech_dict
+    except:
+        sys.stderr.write("Stechometry string format is wrong, please follow this format: A:2,B:11,C:4, ...")
+        sys.exit(1)
 
 
 def build_macrocomplex(directory, output, max_chains=300, num_models=1, template=False, dirty=False, verbose=False, stech_string=False):

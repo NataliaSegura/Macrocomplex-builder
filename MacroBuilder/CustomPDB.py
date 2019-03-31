@@ -95,7 +95,7 @@ class CustomChain(Chain):
         len_other = len(other_atoms)
         # Return the atom list sliced by the limitant distance
         if len_self > len_other:
-            return self_atoms[:len_other], other_atoms  
+            return self_atoms[:len_other], other_atoms
         elif len_other > len_self:
             return self_atoms, other_atoms[:len_self]
         else: # If they are equal, just return the atoms lists
