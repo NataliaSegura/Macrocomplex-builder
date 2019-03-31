@@ -66,7 +66,7 @@ The package has the following structure:
       README.md
       README.pdf
       setup.py
-      MB/
+      MacroBuilder/
           __init__.py
           MacroB.py
           CustomPDB.py
@@ -75,17 +75,17 @@ The package has the following structure:
       Examples/
           enterovirus/
           hemo/
-          microtuble/
+          microtubul/
           nucleosome/
           phosphate/
           proteasome/
-      Templates/
-          3j23_enterovirus/
-          1a3n_hemo/
-          5syg_microtuble/
-          3kuy_nucleosome/
-          2f1d_phosphate/
-          1pma_proteosome/
+      templates/
+          1pma_proteosome.pdb.zip
+          3kuy_nucleosome.pdb
+          1a3n_hemoglobin.pdb
+          3j23_enterovirus.pdb
+          5syg_microtubul.pdb
+          **all templates**
       doc/
           report.md
 
