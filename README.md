@@ -162,10 +162,6 @@ Throught our template analysis we do not see any differences with respect the nu
 
 3j23 PDB entry is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). EV71 os a single-stranded positive-sense RNA virus and a causative agent of hand, food, and mouth disease. 3j23 is a macrocomplex with three unique protein chains and a stoichiometry of hetero 180-mer-A60B60C60 with 4, 5 and 7 in each chain respectively.
 Giving a set of protein-protein interactions, 4SMacroBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both(image ***XX AND YY***).   
-<p align="center">
-  <img src="/3j23_enterovirus.png" alt="template image" width="450"/>
-  <img src="/enterovirus.png" alt="model created" width="450"/>
-</p>
 
 <div class="row">
     <div class="col-md-6">
@@ -173,7 +169,7 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
         <img src="/images/3j23_enterovirus.png" alt="template_image" style="width:500px;height:400px">
         <div class="caption">
           <h4><b>Figure 2</b></h4>
-          <p><i>In blue we see the 1pma PDB protein and in brown the model created by 4SMacroBuilder</i></p>
+          <p><i>3j23 PDB Enterovirus 71 empty capsid</i></p>
         </div>
       </div>
     </div>
@@ -182,14 +178,27 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
         <img src="/images/enterovirus.png" alt="enterovirus_image" style="width:500px;height:400px">
         <div class="caption">
           <h4><b>Figure 3</b></h4>
-          <p><i>In blue we see the 1pma PDB protein and in brown the model created by 4SMacroBuilder</i></p>
+          <p><i>Enterovirus model created by 4SMacroBuilder</i></p>
         </div>
       </div>
     </div>
 </div>
+
 ### Nucleosome
+3kuy PDB entry is the DNA stretching in the nucleosome core of *Escherichia coli* (https://www.rcsb.org/structure/3kuy).The DNA stretching in the nucleosome core can cause dramatic structural distortions, which may influence compaction and factor recognition in chromatin. It has a Stoichiometry of hetero 8-mer-A6B2.
+4SMacroBuilder is able to create this protein - nucleic acid macrocomplex with 4 protein chains and 2 nucleotic acid chains with a total of 28 different pairwise interactions.
 
-
+<div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail">
+        <img src="/images/nucleosome.png" alt="model_nucleosome_image" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>Figure 4</b></h4>
+          <p><i>Proteosome model created by 4SMacroBuilder</i></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 ## Strong Points
 
