@@ -82,7 +82,7 @@ The package has the following structure:
           1a3n_hemoglobin.pdb
           3j23_enterovirus.pdb
           5syg_microtubul.pdb
-          **all templates**
+
       doc/
           report.md
           CustomPDB.m.html
