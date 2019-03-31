@@ -13,7 +13,7 @@ def read_pdbs(directory, verbose=False):
     if verbose:
         print("Reading pdb input files from %s" % directory)
     parser = PDBParser(PERMISSIVE=1, QUIET=True)
-    if os.path.isdir(directory):
+    if os.path.isdir(directory) and directory.endswith("/"):
         try:
             pdbmodels = [parser.get_structure("Model_pair", directory + f)[0] for
                     f in listdir(directory) if f.endswith(".pdb")] #  Generates pdb objects for files that end with .pdb
@@ -209,14 +209,14 @@ def save_results(out_models, output):
 
 
 def main_loop(num_models, output, seq_dict, interaction_dict, verbose=False, max_chains=100, dirty=False,
-              stoich_dict=False):
+              stech_dict=False):
     """Using the interaction dictionary, this function generates macrocomplex model/s. It begins with a template model
     and starts adding chains until conditions allow. Finally it returns a list of pdb instance models."""
     out_models = []
     for i in range(1, num_models + 1):
         print("Macrocomplex " + str(i) + " ...")
         macrocomplex = get_starting_model(interaction_dict, verbose).copy()  # Selects a starting model
-        model_stoich = generate_model_profile(macrocomplex)  # Generates the stoichometry of the first two chains
+        model_stech = generate_model_profile(macrocomplex)  # Generates the stechometry of the first two chains
         macrocomplex.id = "Model_" + str(i)
         run = True  # WHile this variable is true, the program will keep trying to add chains to the macrocomplex
         num_of_chains = 2  # The model starts with 2 chains already
@@ -228,15 +228,15 @@ def main_loop(num_models, output, seq_dict, interaction_dict, verbose=False, max
                         random.shuffle(chain.interactions)  # Shuffle the interactions list (to avoid
                         # repetitive behaviour)
                         for inter_tple in chain.interactions:
-                            if stoich_dict:  # If there is stoichometry input (either as stirng or template pdb)
+                            if stech_dict:  # If there is stechometry input (either as stirng or template pdb)
                                 target_chain_id = interaction_dict[chain.id][inter_tple][1].id  # chain to be added
-                                if target_chain_id in model_stoich:  # If it's in the stoich model profile
-                                    model_number_chain = model_stoich[target_chain_id]  # Get the number of repetitions
+                                if target_chain_id in model_stech:  # If it's in the stech model profile
+                                    model_number_chain = model_stech[target_chain_id]  # Get the number of repetitions
                                     # of this chain
                                 else:
                                     model_number_chain = 0  # Otherwise it means it's still not in the model
-                                if stoich_dict[target_chain_id] <= model_number_chain:  # If the number of this target
-                                    # chain would surpass the stoichemestry given, don't add the chain and
+                                if stech_dict[target_chain_id] <= model_number_chain:  # If the number of this target
+                                    # chain would surpass the stechemestry given, don't add the chain and
                                     if verbose:
                                         print("(S) Chain NOT added: interaction " + chain.id + ": " +
                                             str(inter_tple[:1]) + " ... " + str(inter_tple[-1]) + " to " + target_chain_id)
@@ -256,8 +256,8 @@ def main_loop(num_models, output, seq_dict, interaction_dict, verbose=False, max
                                           str(inter_tple[0]) + " ... " + str(inter_tple[-1]) + " to " + move.id)
                                 move.parent = None  # Sets the parent to none to evade biopython's strict id policy
                                 macrocomplex.add(move)  # Adds the target chain to the model
-                                model_stoich.setdefault(move.id, 0)  # Updates stoich dict
-                                model_stoich[move.id] += 1
+                                model_stech.setdefault(move.id, 0)  # Updates stech dict
+                                model_stech[move.id] += 1
                                 num_of_chains += 1
                                 if dirty:  # Generates a cif file for each step in the building of the model
                                     macrocomplex.save_to_mmCIF(output + str(i) + "_tmp_" + str(num_of_chains))
@@ -275,18 +275,18 @@ def main_loop(num_models, output, seq_dict, interaction_dict, verbose=False, max
             if num_empty_chains >= len(macrocomplex):  # If all chains are empty of interactions stop running
                 run = False
         if verbose:
-            stoichometry_string = ""  # Print the model's stoichometry
-            for key in sorted(model_stoich.keys()):
-                stoichometry_string += key + ":" + str(model_stoich[key]) + ","
-            stoichometry_string = stoichometry_string[:-1]
-            print("Macrocomplex's"+str(i)+" Stoichiometry is: "+stoichometry_string)
+            stechometry_string = ""  # Print the model's stechometry
+            for key in sorted(model_stech.keys()):
+                stechometry_string += key + ":" + str(model_stech[key]) + ","
+            stechometry_string = stechometry_string[:-1]
+            print("Macrocomplex's"+str(i)+" Stoichiometry is: "+stechometry_string)
         print("Macrocomplex " + str(i) + " finished")
         out_models.append(macrocomplex)  # Add model to the models list
     return out_models
 
-def get_template_stoich_dict(template, seq_dict, verbose=False):
-    """Generates a stoichometry dictionary for a given pdb template"""
-    template_stoich_dict = {}  # Format: { "A": 2, "B": 3, ...}, where key is chain id and value
+def get_template_stech_dict(template, seq_dict, verbose=False):
+    """Generates a stechometry dictionary for a given pdb template"""
+    template_stech_dict = {}  # Format: { "A": 2, "B": 3, ...}, where key is chain id and value
     # is the number of repetitions
     parser = PDBParser(PERMISSIVE=1, QUIET=True)
     template_object = parser.get_structure("template", template)[0]  # Generates pdb template object
@@ -296,27 +296,27 @@ def get_template_stoich_dict(template, seq_dict, verbose=False):
         chain_seq = chain.get_sequence()
         if chain_seq in seq_dict:
             chain.id = seq_dict[chain_seq]  # Updates the template chain id to the corresponding by its sequence
-            template_stoich_dict.setdefault(chain.id, 0)
-            template_stoich_dict[chain.id] += 1  # Adds to chain id counter
-    if verbose:  # Transforms the stoich_dict to a string to be printed
-        stoichometry_string = ""
-        for key in sorted(template_stoich_dict.keys()):
-            stoichometry_string += key+":"+str(template_stoich_dict[key])+","
-        stoichometry_string = stoichometry_string[:-1]
-        print("Template's Stoichiometry is: "+stoichometry_string)
-    return template_stoich_dict
+            template_stech_dict.setdefault(chain.id, 0)
+            template_stech_dict[chain.id] += 1  # Adds to chain id counter
+    if verbose:  # Transforms the stech_dict to a string to be printed
+        stechometry_string = ""
+        for key in sorted(template_stech_dict.keys()):
+            stechometry_string += key+":"+str(template_stech_dict[key])+","
+        stechometry_string = stechometry_string[:-1]
+        print("Template's Stoichiometry is: "+stechometry_string)
+    return template_stech_dict
 
-def get_string_stoich_dict(stoich_string):
-    """Given a stoichometry string it transsforms it to a dictionary"""
-    stoich_dict = {}
-    stoich_lst = stoich_string.split(",")  # Generates a stoich list: ["A:3", "B:2", ...]
-    for stoich in stoich_lst:
-        chain, number = stoich.split(":")
-        stoich_dict[chain] = int(number)  # Chain id as key and number as value: { "A": 3, "B": 2, ...}
-    return stoich_dict
+def get_string_stech_dict(stech_string):
+    """Given a stechometry string it transsforms it to a dictionary"""
+    stech_dict = {}
+    stech_lst = stech_string.split(",")  # Generates a stech list: ["A:3", "B:2", ...]
+    for stech in stech_lst:
+        chain, number = stech.split(":")
+        stech_dict[chain] = int(number)  # Chain id as key and number as value: { "A": 3, "B": 2, ...}
+    return stech_dict
 
 
-def build_macrocomplex(directory, output, max_chains=300, num_models=1, template=False, dirty=False, verbose=False, stoich_string=False):
+def build_macrocomplex(directory, output, max_chains=300, num_models=1, template=False, dirty=False, verbose=False, stech_string=False):
     """Main function that integrates all the important steps. First it reads the pdb models ans stores them in a list.
     Then it compares all the chains and unifies the chain ids of the pdb list updating them, it also generates a sequence
     key dictionary. Then it checks at each pdb model for chain interactions and stores them in a dictionary. After it
@@ -336,14 +336,14 @@ def build_macrocomplex(directory, output, max_chains=300, num_models=1, template
     interaction_dict = get_interaction_dict(in_pdbmodels, verbose=verbose)
     # Changes interaction_dict chain objects to CustomChain instances and adds the interactions to each instance
     update_interactions_dict(interaction_dict, verbose)
-    stoich_dict = {}
+    stech_dict = {}
     # If a template or a string has been given to set Stoichometry, it generates a dictionary of it
     # { "A":5, "B":2, "C":6, .. }
     if template:
-        stoich_dict = get_template_stoich_dict(template, seq_dict, verbose=verbose)
-    elif stoich_string:
-        stoich_dict = get_string_stoich_dict(stoich_string)
+        stech_dict = get_template_stech_dict(template, seq_dict, verbose=verbose)
+    elif stech_string:
+        stech_dict = get_string_stech_dict(stech_string)
     # Starts iterating the interaction pair with more known interactions and generates the model/s
-    out_pdbmodels = main_loop(num_models, output, seq_dict, interaction_dict, verbose, max_chains, dirty, stoich_dict=stoich_dict)
+    out_pdbmodels = main_loop(num_models, output, seq_dict, interaction_dict, verbose, max_chains, dirty, stech_dict=stech_dict)
     # Saves the model/s to ciff format
     save_results(out_pdbmodels, output)
