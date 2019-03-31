@@ -208,7 +208,7 @@ def save_results(out_models, output):
     print("Done\n")
 
 
-def main_loop(num_models, output, seq_dict, interaction_dict, verbose=False, max_chains=100, dirty=False,
+def main_loop(num_models, output, interaction_dict, verbose=False, max_chains=100, dirty=False,
               stech_dict=False):
     """Using the interaction dictionary, this function generates macrocomplex model/s. It begins with a template model
     and starts adding chains until conditions allow. Finally it returns a list of pdb instance models."""
@@ -344,6 +344,6 @@ def build_macrocomplex(directory, output, max_chains=300, num_models=1, template
     elif stech_string:
         stech_dict = get_string_stech_dict(stech_string)
     # Starts iterating the interaction pair with more known interactions and generates the model/s
-    out_pdbmodels = main_loop(num_models, output, seq_dict, interaction_dict, verbose, max_chains, dirty, stech_dict=stech_dict)
+    out_pdbmodels = main_loop(num_models, output, interaction_dict, verbose, max_chains, dirty, stech_dict=stech_dict)
     # Saves the model/s to ciff format
     save_results(out_pdbmodels, output)

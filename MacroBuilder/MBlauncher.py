@@ -66,6 +66,3 @@ stech.add_argument('-s',
 options = parser.parse_args()
 build_macrocomplex(options.directory, options.output, options.max_chains, options.num_models, dirty=options.dirty,
                        verbose=options.verbose, template=options.template, stech_string=options.stech_string)
-
-
-x = 0
