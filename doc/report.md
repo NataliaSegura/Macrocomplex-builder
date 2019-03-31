@@ -61,6 +61,16 @@ The superimposition starts with the chain with more interactions, to avoid start
 
 This approach works also with DNA and RNA interactions, as we just checked the atomic position of each structure. The only thing we did is a function to store the DNA or RNA sequence and, from that, the main loop manage to build the whole structure.
 
+## Computational cost
+
+One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtuble folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
+
+We did a series of tests normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 4 interactions by chain. 
+
+Thanks to the illimited number of chains input that we can test when creating the microtuble we can asses its growing time curve. As it can be seen in the following graph, it might seem that until 200 chains the program followed a linear tendency but when a bigger number of calculations and steps was needed to create the microtuble, i.e. more chains, this behaviour is proven wrong. In fact, the program really follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run in an exopenential way.
+
+>![**Time performing program analysis. In the X-axis there is the number of chains the user can provide with the -t optional argument and in the Y-axis there is the time in seconds MacrocomplexBuilder needs.**](../images/analysis.png "approach_explanation_image"){width=50.3%}   
+
 ### Strong Points
 
 *1*. **Dynamic programming implementation**
@@ -92,16 +102,6 @@ Possibility to limit the number of chains when executing the program. Besides, i
 *7*. **Heteroatoms and water matter**
 
 The active site of a protein often is composed by anions and cations. This information is described in the heteroatoms. MacrocomplexBuilder can use the heteroatom and water coordinates and information to construct the macrocomplex so we are not losing biological information. 
-
-## Computational cost
-
-One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtuble folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
-
-We did a series of tests normalizing by number of atoms and interactions. The microtuble has two different chains, with an average of 3347 atoms and 4 interactions by chain. 
-
-Thanks to the illimited number of chains input that we can test when creating the microtuble we can asses its growing time curve. As it can be seen in the following graph, it might seem that until 200 chains the program followed a linear tendency but when a bigger number of calculations and steps was needed to create the microtuble, i.e. more chains, this behaviour is proven wrong. In fact, the program really follows an exponential curve. The more atoms/iterations it has to check, the more time it needs to run in an exopenential way.
-
->![**Time performing program analysis. In the X-axis there is the number of chains the user can provide with the -t optional argument and in the Y-axis there is the time in seconds MacrocomplexBuilder needs.**](../images/analysis.png "approach_explanation_image"){width=50.3%}   
 
 
 ## Limitations
