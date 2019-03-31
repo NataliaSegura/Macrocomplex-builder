@@ -31,7 +31,7 @@
 
 4SMacroBuilder is a stand-alone python3 program developed by Pau Badia i Monpel, Altaïr C. Hernández and Natàlia Segura Alabart. It builds protein macrocomplexes taking a set of protein-protein, protein-RNA, protein-DNA, RNA - DNA, RNA - RNA, and/or DNA - DNA interactions. This software could serve to study quaternary structures that are difficult to study *in vivo*.
 
-Below is shown how to install and use this program as a standalone command line script (executing the script *MacroB.py*) or with the Graphical User Interface (*tkinter.py*).
+Below is shown how to install and use this program as a standalone command line script (executing the script *MacroB.py*) or with the Graphical User Interface (*MB_GUI.py*).
 
 
 ### Software Requirements
@@ -190,20 +190,35 @@ Giving a set of protein-protein interactions, 4SMacroBuilder is able to construc
 
 ## Strong Points
 
-* The algorithm is based in a dynamic programming implementaton, in such a way that the final output is retrived in a very short time. This is due to the fact tha we use the interactions between chains as a previous knowlege to solve the final problem (*see documentation*). 
-* The program accepts a wide range of input types: 
+1. **Dynamic programming implementation**
+
+The algorithm is based in a dynamic programming implementaton, in such a way that the final output is retrived in a very short time. This is due to the fact tha we use the interactions between chains as a previous knowlege to solve the final problem (*see documentation*). 
+
+2. **Input managing**
+
   - The input names does not affect to the output (i.e. if all PDB files are named XY.pdb).
   - The input does not need all the interactions in different PDB files (i.e. case of virus capside or microtubul, with more than 150 chain-interaction in the case of the virus capside, and infinite interactions in the microtubul).
   - If the user gives a non-existing or wrong interaction the program ignores it and keeps going.
-  - Different ways of executing 4SMAcroBuilder: from command line or with GUI.
-  - Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models. Different models are scored in an output file.
-  - Possibility to model DNA/RNA - protein interactions if given.
+
+3. **Obtain different models**
+
+Possibility to generate different models in a very short time. This allow the user to compare each model and decide which is/are the best models. Different models are scored in an output file.
+
+4. **Launching the program with GUI**
+
+Different ways of executing 4SMAcroBuilder: from command line or with GUI.
+
+5. **DNA & RNA interactions**
+ 
+ Possibility to model DNA/RNA - protein interactions if given.
+ 
   - Possibility to limit the number of chains when executing the program.
   - If the user specifies that wants the macrocomplex with 7 chains but in fact the model has only 4 chains (i.e. Hemoglobin), it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
 
 
 ## Limitations
 
+1. **Increase of the computational cost with number of atoms in macrocomplex**
 
 One of the main limitations dealing with the creation of a macrocomplex is the number of atoms and number of interactions it has. That's why we did a deeper anaylisis of these two factors using the microtubul folder. What is advantatgeous about this macrocomplex is that without any limitations it can go on forever without stopping, more or less like in a cell. But, limiting its parameters, it enables us to analyse our program.
 
@@ -213,15 +228,32 @@ As it can be seen in the following graph, the program follows an exponential cur
 
 **graph**
 
+2. **Microtubul modeling**
+
 Another factor that limit our program is that, due to some aspects of our approach, some "infinite" structures as the microtubule is not modeled as expected. This is possibly due to a random behavior implemented in the algorithm when adding subunits to the macrocomplex. 
 
-We don't offer an no option to optimze our model once it's finished. 
+3. **Different solutions**
+
+Although the program can be asked to build more than one model from the same input, it is not able to deduce and build more than one output when there could be more than one possible solution. 
 
 ## Next Steps
+
+*What could be the next future improvements?*
+
+1. **Model Energy Minimization**
+
+It could be implemented an option of energy optimization by molecular dynamics once the model/s are finished. Protein structures often have errors 
+ 
+ 
+
+2. **Model Energy Minimization**
+
+
+3. **Microtubul modeling**
 
 It would be a good point to modify the algorithm approach which could improve the correct shape of the microtubul, as well as other non limit structures. We think that a way to do it could be to fisrt itearte the program by chain interactions as it does, but and, at a certain time force it to start again, but adding those interactions that had not been added yet.  
 
 ## FAQS
 
 **Do I need PyMOL to launch and use the GUI?**
-<p><b>Answer:</b>No, it is not necessary, but it is advisable to install <a href="https://pymol.org/2/">PyMOL</a> in order to see the whole macrocomplex/es once they have been done.</p>
+**Answer**:No, it is not necessary, but it is advisable to install [Pymol](https://pymol.org/2/) in order to see the whole macrocomplex/es once they have been done.
