@@ -2,7 +2,7 @@ from Bio.PDB.Structure import Structure
 from Bio.PDB.Model import Model
 from Bio.PDB.Chain import Chain
 import Bio.PDB.NeighborSearch
-import random
+import sys
 
 class CustomModel(Model):
     """Allows models with more than one same id"""
@@ -11,12 +11,15 @@ class CustomModel(Model):
         entity.set_parent(self)
         self.child_list.append(entity)
 
-    def save_to_mmCIF(self, out_name, verbose):
+    def save_to_mmCIF(self, out_name):
         io = Bio.PDB.MMCIFIO()
         io.set_structure(self)
-        io.save(out_name+".cif")
-        if verbose:
+        try:
+            io.save(out_name+".cif")
             print(out_name+".cif saved")
+        except:
+            sys.stderr.write("Couldn't save models to current working directory. "
+                             "Make sure you have permission to write files")
 
 
 class CustomChain(Chain):
@@ -49,7 +52,7 @@ class CustomChain(Chain):
         interaction_res_1 = set()
         interaction_res_2 = set()
         for atom in atom_list_1:
-            inter_atoms = ns.search(atom.coord, 5)
+            inter_atoms = ns.search(atom.coord, 3.5)
             if len(inter_atoms) > 0:
                 interaction_res_1.add(atom.get_parent().id[1])
                 for iatom in inter_atoms:
