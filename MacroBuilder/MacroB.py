@@ -230,11 +230,9 @@ def main_loop(num_models, output, interaction_dict, verbose=False, max_chains=10
                         for inter_tple in chain.interactions:
                             if stech_dict:  # If there is stechometry input (either as stirng or template pdb)
                                 target_chain_id = interaction_dict[chain.id][inter_tple][1].id  # chain to be added
-                                if target_chain_id in model_stech:  # If it's in the stech model profile
-                                    model_number_chain = model_stech[target_chain_id]  # Get the number of repetitions
-                                    # of this chain in the model
-                                else:
-                                    model_number_chain = 0  # Otherwise it means it's still not in the model
+                                model_stech.setdefault(target_chain_id, 0)
+                                model_number_chain = model_stech[target_chain_id]  # Get the number of repetitions
+                                stech_dict.setdefault(target_chain_id, 0)
                                 if stech_dict[target_chain_id] <= model_number_chain:  # If the number of this target
                                     # chain would surpass the stechemestry given, don't add the chain and
                                     if verbose:
