@@ -142,7 +142,7 @@ Using the template (-t) optional argument. The program can compare between the m
 
 ### Proteosome
 
-1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by ptoteolysis of the protein peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer -A14B14.
+1pma PDB entry is a proteosome from *Thermoplasma acidophilum* (https://www.rcsb.org/structure/1PMA). A proteosome is a protein macrocomplex which degrade proteins by proteolysis of the protein peptide bonds. 1pma is a macrocomplex with two unique protein chains and a stoichiometry of hetero 28-mer-A14B14 with 4 interactions in one chain and 7 interactions in the other.
 Throught our template analysis we do not see any differences with respect the number of chains between the one created and the template. Further analysis is done by structural visual comparison using an interactive visualization and molecular structural analysis programm such as UCSF CHIMERA. We can't oberve any differences in their structure, the superposition done is totally perfect. 
 
 <div class="row">
@@ -160,13 +160,33 @@ Throught our template analysis we do not see any differences with respect the nu
 
 ### Enterovirus
 
-3j23 is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). 
+3j23 PDB entry is the Enterovirus 71 empty capsids (https://www.rcsb.org/structure/3j23). EV71 os a single-stranded positive-sense RNA virus and a causative agent of hand, food, and mouth disease. 3j23 is a macrocomplex with three unique protein chains and a stoichiometry of hetero 180-mer-A60B60C60 with 4, 5 and 7 in each chain respectively.
 Giving a set of protein-protein interactions, 4SMacroBuilder is able to construct the whole capsid macrocomplex. Comparing the structural composition of the model versus a template, we can observe any differences between both(image ***XX AND YY***).   
 <p align="center">
   <img src="/3j23_enterovirus.png" alt="template image" width="450"/>
   <img src="/enterovirus.png" alt="model created" width="450"/>
 </p>
 
+<div class="row">
+    <div class="col-md-6">
+      <div class="thumbnail">
+        <img src="/images/3j23_enterovirus.png" alt="template_image" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>Figure 2</b></h4>
+          <p><i>In blue we see the 1pma PDB protein and in brown the model created by 4SMacroBuilder</i></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="thumbnail">
+        <img src="/images/enterovirus.png" alt="enterovirus_image" style="width:500px;height:400px">
+        <div class="caption">
+          <h4><b>Figure 3</b></h4>
+          <p><i>In blue we see the 1pma PDB protein and in brown the model created by 4SMacroBuilder</i></p>
+        </div>
+      </div>
+    </div>
+</div>
 ### Nucleosome
 
 
