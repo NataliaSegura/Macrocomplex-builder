@@ -95,6 +95,10 @@ This program needs an input of PDB files holding the protein pairwise interactio
 * Pairwise interactions wrongly given to the program. The program threshold for considering two chains as interacting together is 3.5 Amstrongs. If the user gives interactions with bigger distance, they are not considered as such.
 * A template PDB file containing the structure of the model to use it as a guideline.
 
+
+All the models that only have protein - protein interactions can be dispalyed with both USCF CHIMERA and Pymol but when the model has nucleic acid interactions it must be opened with Pymol.
+
+
 ### Tutorial
 
 In this section we make a brief explanation of how to use MacrocomplexBuilder.
@@ -213,7 +217,7 @@ MacrocomplexBuilder is able to create this protein - nucleic acid macrocomplex w
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 ### Strong Points
 
@@ -284,11 +288,8 @@ Although the program can be asked to build more than one model from the same inp
 
 *4*. **The ATP problem and global stechiometry**
 
-The problem with these macrocomplex is the number of interactions it has and the program can't handle all of them to create it. A way to modify the algorithm approach to be able to construct correctly these macrocomplex is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way. 
+The problem with the ATP synthase macrocomplex is the number of interactions it has. The program can't handle all of them to create it and the wrong model is built. A way to modify the algorithmic approach is by givin stechiometry into the programm. That way, we limit the interactions and we force the macrocomplex into a specific shape. This can be achived using the optional argument -s (stechiometry). We give to the program the global macrocomplex stechiometry and it will build it using this parameters. A clear disatvantage of it is that even with the correct stechiometry it doesn't construct the right way because we are forcing the right number of chains but not whose interactions are in each one.
 
-
-
-The aim of the optional argument stechiometry is to solve the ATP problem. In that way, the problem 
 
 ## Next Steps
 
