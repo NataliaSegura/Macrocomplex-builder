@@ -206,14 +206,15 @@ Possibility to generate different models in a very short time. This allow the us
 
 4. **Launching the program with GUI**
 
-Different ways of executing 4SMAcroBuilder: from command line or with GUI.
+4SMAcroBuilder can be launched from command line or with the **Graphical User Interface** (GUI). Besides, the GUI offer the advantatge to obtain a Pymol image of the final model, without the requirement of opening pymol.
 
 5. **DNA & RNA interactions**
  
- Possibility to model DNA/RNA - protein interactions if given.
- 
-  - Possibility to limit the number of chains when executing the program.
-  - If the user specifies that wants the macrocomplex with 7 chains but in fact the model has only 4 chains (i.e. Hemoglobin), it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
+Possibility to model DNA/DNA, RNA/RNA, DNA/RNA, DNA/protein and RNA/protein interactions and retrieve a quick output (i.e. when modeing the ribosome).
+
+6. **Modifiable number of chains in the final model**
+
+Possibility to limit the number of chains when executing the program. Besides, if the user specifies that wants the macrocomplex with 7 chains but in fact the model has only 4 chains (i.e. Hemoglobin), it will not try to put more just because it was asked. This limited and reduces very much the program performance time.
 
 
 ## Limitations
